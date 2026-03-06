@@ -7,7 +7,7 @@
         v-for="card in cards"
         :key="card.id"
       )
-        span.text-2xl 🧚
+        span.text-2xl 👹
 </template>
 
 <script setup lang="ts">

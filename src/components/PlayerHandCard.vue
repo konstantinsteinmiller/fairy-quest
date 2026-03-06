@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import type { FairyCard } from '@/types/game'
+import type {FairyCard} from '@/types/game'
 import FairyCardDisplay from '@/components/FairyCardDisplay'
 
 defineProps<{
@@ -24,5 +24,6 @@ defineProps<{
   isActive: boolean
   selectedId: string | null
 }>()
+
 const emit = defineEmits(['dragstart', 'select'])
 </script>

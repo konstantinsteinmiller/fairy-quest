@@ -8,7 +8,6 @@ export const useInteraction = (
   const selectedCardId = ref<string | null>(null)
 
   const handleDragStart = (event: DragEvent, card: FairyCard) => {
-    // Standard desktop drag
     event.dataTransfer?.setData('cardId', card.id)
     selectedCardId.value = card.id
   }
@@ -19,7 +18,7 @@ export const useInteraction = (
   }
 
   const handleTapSelect = (card: FairyCard) => {
-    // Primary mobile interaction
+    // If clicking the same card, deselect it. Otherwise select the new one.
     selectedCardId.value = selectedCardId.value === card.id ? null : card.id
   }
 
@@ -33,13 +32,18 @@ export const useInteraction = (
     const index = playerHand.value.findIndex(c => c.id === id)
     if (index !== -1) {
       const card = playerHand.value[index]
-      const success = placeCard(card, x, y)
-      if (success) {
+      if (placeCard(card, x, y)) {
         playerHand.value.splice(index, 1)
         selectedCardId.value = null
       }
     }
   }
 
-  return {selectedCardId, handleDragStart, handleDrop, handleTapSelect, handleSlotTap}
+  return {
+    selectedCardId,
+    handleDragStart,
+    handleDrop,
+    handleTapSelect,
+    handleSlotTap
+  }
 }
