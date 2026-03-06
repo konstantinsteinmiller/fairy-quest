@@ -14,9 +14,13 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     VueI18nPlugin({
-      /* options */
-      // locale messages resource pre-compile option
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './path/to/src/locales/**'),
+      // 1. Tell the plugin where your global translation files are
+      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/locales/**'),
+
+      // 2. This allows you to use YAML in the <i18n> block
+      // The plugin usually detects yaml automatically, but you can force
+      // strict behavior if needed by ensuring the 'yaml' loader is available.
+      defaultSFCLang: 'yaml',
     }),
   ],
   resolve: {

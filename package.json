@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check \"build-only {@}\" --",
-    "preview": "vite preview",
+    "build-github-main": "vite build --base=/fairy-quest/ --outDir=dist",
+    "build-github-develop": "vite build --base=/fairy-quest/develop/ --outDir=dist/develop",
+    "validated-build": "vue-tsc -b && vite build",
+    "deploy": "vite build && surge dist/ --domain fairy-quest.surge.sh",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write --experimental-cli src"
   },
   "dependencies": {
     "vue": "^3.5.29",
+    "vue-i18n": "^11.2.8",
     "vue-router": "^5.0.3"
   },
   "devDependencies": {

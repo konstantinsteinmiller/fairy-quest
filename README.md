@@ -4,11 +4,11 @@ A fairy card battle game
 
 WIP: demo
 
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/master/src/assets/documentation/fairy-quest.png)
+![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest.png)
 
-![Fairy Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/master/src/assets/documentation/rodent-race-menu.png)
+![Fairy Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/rodent-race-menu.png)
 
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/master/src/assets/documentation/fairy-quest-second.png)
+![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest-second.png)
 
 # Todo
 - [ ] basic gamefield
