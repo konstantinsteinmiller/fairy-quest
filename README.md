@@ -2,7 +2,7 @@
 
 A fairy card battle game
 
-WIP: demo
+WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
 ![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest.png)
 

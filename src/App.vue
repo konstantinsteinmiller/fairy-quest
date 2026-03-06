@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+import {useI18n} from 'vue-i18n'
 
-const { t } = useI18n()
+const {t} = useI18n()
 </script>
 
-<template>
-  <h1 class="text-green-400 text-2xl">You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+<template lang="pug">
+  .container
+    h1(class="text-2xl") Hello from Pug
+    p Indentation-based templates are back!
 
-  <h1>{{ t('hello') }}</h1>
+  p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias beatae doloremque dolores error explicabo incidunt laboriosam maxime modi nam, natus nobis omnis quia velit veniam voluptates. Excepturi impedit sed temporibus.
+
+  h1 {{ t('hello') }}
 </template>
 
 <style scoped></style>
@@ -23,5 +23,7 @@ $color: red
 
 <i18n>
 de:
+  hello: Willkommen bei I18n
+en:
   hello: Welcome to I18n
 </i18n>
