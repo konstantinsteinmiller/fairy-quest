@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
+import GameField from '@/components/GameField'
 
 const {t} = useI18n()
 </script>
 
 <template lang="pug">
-  .container
-    h1(class="text-2xl") Hello from Pug
-    p Indentation-based templates are back!
-
-  p Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias beatae doloremque dolores error explicabo incidunt laboriosam maxime modi nam, natus nobis omnis quia velit veniam voluptates. Excepturi impedit sed temporibus.
-
-  h1 {{ t('hello') }}
+  GameField
 </template>
 
 <style scoped></style>
