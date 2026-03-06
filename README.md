@@ -4,19 +4,21 @@ A fairy card battle game
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
-![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest.png)
+![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.png)
 
 ![Fairy Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/rodent-race-menu.png)
 
 ![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/fairy-quest-second.png)
 
 # Todo
-- [ ] basic gamefield
-- [ ] static selected cards
+- [x] basic gamefield
+- [x] static selected cards
   - [ ] select cards from card stash
-  - [ ] drag and drop for a card
-  - [ ] 
-- [ ] 
+  - [x] drag and drop for a card
+  - [x] tap to select a card and place
+- [ ] Npc logic
+  - [x] random choice
+  - [ ] smart choice
 - [ ] 
 - [ ] 
 
