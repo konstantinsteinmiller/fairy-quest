@@ -24,8 +24,13 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
     - [x] load fairy images
     - [ ] add frames to Cards
         - [ ] selected card frame
-        - [ ] not-selected card frame
-- [ ] 
+        - [x] not-selected card frame
+- [ ] GameOverModal
+    - [x] show winner / loser / draw
+    - [x] restart game button
+    - [ ] frame
+- [ ] Cards can also attack diagonally
+- [ ] Card Designer from Fairy Dust
 
 ## Bugs
 

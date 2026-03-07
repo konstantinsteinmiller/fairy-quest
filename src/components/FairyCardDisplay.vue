@@ -1,34 +1,51 @@
 <template lang="pug">
   div.fairy-card.relative.perspective-1000.w-full.h-full(class="select-none")
-    // The 3D Wrapper
+    //- The 3D Wrapper
     div.w-full.h-full.relative.transition-transform.duration-700.transform-style-3d(
       :class="card.owner === 'player' ? 'rotate-y-0' : 'rotate-y-180'"
     )
-      // Single Card Face
-      div.absolute.inset-0.backface-hidden.rounded-lg.shadow-lg.border-2.overflow-hidden(
-        :class="[card.owner === 'player' ? 'border-blue-400 bg-blue-800' : 'border-red-400 bg-red-800 rotate-y-180']"
+      //- Single Card Face
+      div.absolute.inset-0.backface-hidden.rounded-lg.shadow-lg.overflow-hidden(
+        :class="[card.owner === 'player' ? '' : 'rotate-y-180']"
       )
+        //- 1. Card Image (Base Layer)
+        img.absolute.inset-0.w-full.h-full.object-cover(
+          :src="card.image"
+          class="scale-[90%]"
+          alt="fairy-card-image"
+        )
 
-        // Internal face container
-        div.w-full.h-full.relative.bg-gray-200.bg-opacity-30.flex.items-center.justify-center(class="p-0.5 sm:p-1")
-          // Value Grid
-          div.absolute.inset-0.grid.grid-cols-3.grid-rows-3.font-black.pointer-events-none.z-10(
-            class="text-[9px] sm:text-base"
+        //- 2. Gradient Tint Overlay
+        div.absolute.inset-0.pointer-events-none.transition-opacity.duration-500(
+          v-if="showTint"
+          :class="card.owner === 'player' ? 'bg-gradient-to-t from-blue-600/60 via-blue-600/10 to-transparent' : 'bg-gradient-to-t from-red-600/60 via-red-600/10 to-transparent'"
+          class="h-full w-full scale-y-[90%] scale-x-[92%]"
+        )
+
+        //- 3. The Frame (Middle Layer)
+        img.absolute.inset-0.w-full.h-full.pointer-events-none.z-10(
+          src="/images/frames/fancy-frame_512x512.png"
+          class="object-fill"
+        )
+
+        //- 4. Value Grid & UI (Top Layer)
+        div.absolute.inset-0.flex.items-center.justify-center.z-20(class="p-0.5 sm:p-1")
+          div.absolute.inset-0.grid.grid-cols-3.grid-rows-3.font-black.pointer-events-none(
+            class="text-[9px] sm:text-base font-[Ribeye]"
           )
-            div.col-start-2.text-center.self-start.text-outline(class="p-0 md:p-1") {{ card.values.top }}
-            div.row-start-2.col-start-1.flex.items-center.text-outline(class="p-1 md:p-2") {{ card.values.left }}
-            div.row-start-2.col-start-3.flex.items-center.justify-end.text-outline(class="p-1 md:p-2") {{ card.values.right }}
-            div.row-start-3.col-start-2.text-center.self-end.text-outline(class="p-0 md:p-1") {{ card.values.bottom }}
-            // Central Icon
-            //span.text-xl(class="sm:text-4xl") {{ card.owner === 'player' ? '🧚' : '👹' }}
-        img.absolute.top-0.left-0(:src="card.image" alt="fairy-card-image" class="w-full h-full object-fit")
-
+            div.col-start-2.text-center.self-start.text-outline(class="p-0.5 md:p-1" :class="showTint ? 'p-1 md:p-2' : ''") {{ card.values.top }}
+            div.row-start-2.col-start-1.flex.items-center.text-outline(class="p-1 md:p-2" :class="showTint ? 'p-2 md:p-3' : ''") {{ card.values.left }}
+            div.row-start-2.col-start-3.flex.items-center.justify-end.text-outline(class="p-1 md:p-2" :class="showTint ? 'p-2 md:p-3' : ''") {{ card.values.right }}
+            div.row-start-3.col-start-2.text-center.self-end.text-outline(class="p-0.5 md:p-1" :class="showTint ? 'p-1 md:p-2' : ''") {{ card.values.bottom }}
 </template>
 
 <script setup lang="ts">
-import type {FairyCard} from '@/types/game'
+import type { FairyCard } from '@/types/game'
 
-defineProps<{ card: FairyCard }>()
+defineProps<{
+  card: FairyCard,
+  showTint?: boolean
+}>()
 </script>
 
 <style lang="sass" scoped>
@@ -47,7 +64,6 @@ defineProps<{ card: FairyCard }>()
 .rotate-y-0
   transform: rotateY(0deg)
 
-// Custom text outline for readability
 .text-outline
   color: white
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000

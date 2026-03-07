@@ -1,15 +1,26 @@
 <template lang="pug">
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
-    class="select-none landscape:p-0.5"
+    class="select-none landscape:p-0.5 md:p-4"
   )
+    //- Victory/Defeat Modal
+    GameOverModal(
+      :is-open="isGameOver"
+      :scores="scores"
+      @reset="resetGame"
+    )
+
     //- Top Score Bar
-    ScoreBoard(:board="board")
+    ScoreBoard(
+      :board="board"
+      :player-hand="playerHand"
+      :npc-hand="npcHand"
+    )
 
     //- Main Game Layout
     div.flex.items-center.justify-center.w-full.h-full.gap-1(
-      class="flex-col landscape:flex-row lg:flex-row lg:gap-4"
+      class="flex-col landscape:flex-row lg:flex-row lg:gap-8"
     )
-      //- NPC Hand Container
+      //- NPC Hand
       div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
         class="h-auto landscape:w-auto landscape:h-full"
       )
@@ -25,54 +36,72 @@
         div.grid.grid-cols-3.gap-1(class="sm:gap-2")
           template(v-for="(row, y) in board" :key="y")
             div.contents(v-for="(slot, x) in row" :key="x")
-              div.game-slot.bg-slate-800.rounded-md.border-2.border-dashed.border-slate-600.relative.overflow-hidden(
+              div.game-slot.bg-slate-800.rounded-md.border-2.border-dashed.relative.overflow-hidden(
                 @dragover.prevent
-                @drop="handleDrop($event, x, y)"
-                @click="handleSlotTap(x, y)"
-                :class="{'border-purple-500 bg-slate-700': !slot.card}"
+                @drop="turn === 'player' && handleDrop($event, x, y)"
+                @click="turn === 'player' && handleSlotTap(x, y)"
+                :class="[(!slot.card && turn === 'player') ? 'border-purple-500 bg-slate-700 cursor-pointer' : 'border-slate-600']"
               )
-                FairyCardDisplay(v-if="slot.card" :card="slot.card")
+                FairyCardDisplay(
+                  v-if="slot.card"
+                  :card="slot.card"
+                  :show-tint="true"
+                )
 
-      //- Player Hand Container
-      div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full(
+      //- Player Hand
+      div.hand-container.flex-shrink-0.flex.items-center.justify-center.w-full.transition-all.duration-300(
         class="h-auto landscape:w-auto landscape:h-full"
+        :class="turn === 'player' ? 'opacity-100' : 'opacity-40 grayscale-[50%]'"
       )
         PlayerHandCard(
           :cards="playerHand"
           :is-active="turn === 'player'"
           :selected-id="selectedCardId"
-          @dragstart="handleDragStart"
-          @select="handleTapSelect"
+          @dragstart="(e, id) => turn === 'player' && handleDragStart(e, id)"
+          @select="(id) => turn === 'player' && handleTapSelect(id)"
         )
 
-    //- Reset Button
+    //- Manual Reset Button
     button.absolute.bottom-4.right-4.bg-slate-800.rounded-full(
       @click="resetGame"
-      class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50"
+      class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50 md:p-4 md:bottom-8 md:right-8"
     )
-      span.text-xl 🔄
+      span.text-xl.md_text-3xl 🔄
 </template>
 
 <script setup lang="ts">
-import {onMounted} from 'vue'
-import {useMatch} from '@/use/useMatch'
-import {useNPC} from '@/use/useNPC'
-import {useInteraction} from '@/use/useInteraction'
+import { onMounted, computed } from 'vue'
+import { useMatch } from '@/use/useMatch'
+import { useNPC } from '@/use/useNPC'
+import { useInteraction } from '@/use/useInteraction'
 import PlayerHandCard from '@/components/PlayerHandCard'
 import EnemyHandCard from '@/components/EnemyHandCard'
 import FairyCardDisplay from '@/components/FairyCardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
+import GameOverModal from '@/components/GameOverModal'
 
-const {turn, playerHand, npcHand, board, resetGame, placeCard} = useMatch()
-const {
-  selectedCardId,
-  handleDragStart,
-  handleDrop,
-  handleTapSelect,
-  handleSlotTap
-} = useInteraction(playerHand, placeCard)
+const { turn, playerHand, npcHand, board, resetGame, placeCard } = useMatch()
+const { selectedCardId, handleDragStart, handleDrop, handleTapSelect, handleSlotTap } = useInteraction(playerHand, placeCard)
 
 useNPC(turn, npcHand, board, placeCard)
+
+// Determine if the game is over
+const isGameOver = computed(() => {
+  return board.value.flat().every(slot => slot.card !== null)
+})
+
+const scores = computed(() => {
+  let playerScore = playerHand.value.length
+  let npcScore = npcHand.value.length
+  board.value.forEach(row => {
+    row.forEach(slot => {
+      if (slot.card) {
+        slot.card.owner === 'player' ? playerScore++ : npcScore++
+      }
+    })
+  })
+  return { player: playerScore, npc: npcScore }
+})
 
 onMounted(() => {
   resetGame()
@@ -89,8 +118,8 @@ onMounted(() => {
     --hand-card-size: 15.5vh
 
   @media (min-width: 1024px)
-    --board-card-size: 160px
-    --hand-card-size: 120px
+    --board-card-size: 180px
+    --hand-card-size: 140px
 
 .game-slot
   width: var(--board-card-size)
@@ -103,7 +132,6 @@ onMounted(() => {
   width: 100%
   height: 100%
 
-// CRITICAL: Keep hand container from collapsing
 .hand-container
   min-height: var(--hand-card-size)
   min-width: var(--hand-card-size)

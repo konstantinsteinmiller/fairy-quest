@@ -1,8 +1,8 @@
 <template lang="pug">
   div.flex.items-center.justify-between.w-full.max-w-md.rounded-full.bg-slate-800.shadow-xl.border.border-slate-700(
-    class="mb-1 mt-1 px-4 py-1 sm:mb-4 sm:py-4 md:mt-2 md:max-w-lg landscape:max-h-[40px] landscape:mb-0.5"
+    class="mb-1 px-4 py-1 sm:mb-4 sm:py-2 md:max-w-xl landscape:max-h-[40px] landscape:mb-0.5 font-[Ribeye]"
   )
-    //- Enemy Score
+    //- Enemy Score (NPC Hand + NPC-owned cards on board)
     div.flex.items-center.gap-2(class="sm:gap-3")
       div.rounded-full.bg-red-600.flex.items-center.justify-center.border-2.border-red-400(
         class="w-6 h-6 sm:w-10 sm:h-10 landscape:w-6 landscape:h-6"
@@ -15,7 +15,7 @@
     //- Versus Divider
     div.text-slate-500.font-italic(class="text-[10px] sm:text-base") VS
 
-    //- Player Score
+    //- Player Score (Player Hand + Player-owned cards on board)
     div.flex.items-center.gap-2.flex-row-reverse.text-right(class="sm:gap-3")
       div.rounded-full.bg-blue-600.flex.items-center.justify-center.border-2.border-blue-400(
         class="w-6 h-6 sm:w-10 sm:h-10 landscape:w-6 landscape:h-6"
@@ -27,17 +27,20 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
-import type {BoardSlot} from '@/types/game'
+import { computed } from 'vue'
+import type { BoardSlot, FairyCard } from '@/types/game'
 
 const props = defineProps<{
   board: BoardSlot[][]
+  playerHand: FairyCard[]
+  npcHand: FairyCard[]
 }>()
 
 const scores = computed(() => {
-  let pCount = 0
-  let nCount = 0
+  let pCount = props.playerHand.length
+  let nCount = props.npcHand.length
 
+  // Count ownership on the board
   props.board.forEach(row => {
     row.forEach(slot => {
       if (slot.card) {
@@ -47,6 +50,6 @@ const scores = computed(() => {
     })
   })
 
-  return {player: pCount, npc: nCount}
+  return { player: pCount, npc: nCount }
 })
 </script>
