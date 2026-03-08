@@ -13,6 +13,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 # Todo
 
 - [x] basic game field
+  - [x] background image
+  - [x] grid images
 - [x] static selected cards
     - [x] drag and drop for a card
     - [x] tap to select a card and place
@@ -23,8 +25,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 - [ ] Fairy Models
     - [x] load fairy images
     - [ ] balanced card values
-    - [ ] add frames to Cards
-        - [ ] selected card frame
+    - [x] add frames to Cards
+        - [x] selected card frame
         - [x] not-selected card frame
 - [x] GameOverModal
     - [x] show winner / loser / draw
