@@ -1,39 +1,67 @@
-import {ref} from 'vue'
-import type {FairyCard} from '@/types/game'
+import { ref, type Ref } from 'vue'
+import type { FairyCard } from '@/types/game'
 
 export const useInteraction = (
-  playerHand: { value: FairyCard[] },
+  playerHand: Ref<FairyCard[]>,
   placeCard: (card: FairyCard, x: number, y: number) => boolean
 ) => {
+  // This ref MUST only store the string ID, not the object
   const selectedCardId = ref<string | null>(null)
 
-  const handleDragStart = (event: DragEvent, card: FairyCard) => {
-    event.dataTransfer?.setData('cardId', card.id)
-    selectedCardId.value = card.id
+  /**
+   * Triggered when starting a drag.
+   * Ensure we only pass and store the ID.
+   */
+  const handleDragStart = (event: DragEvent, cardId: string) => {
+    // Safety check: ensure we are receiving a string
+    const id = typeof cardId === 'object' ? (cardId as any).id : cardId
+
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('cardId', id)
+      event.dataTransfer.dropEffect = 'move'
+    }
+
+    selectedCardId.value = id
   }
 
+  /**
+   * Triggered when dropping a card onto a game-slot.
+   */
   const handleDrop = (event: DragEvent, x: number, y: number) => {
-    const id = event.dataTransfer?.getData('cardId') || selectedCardId.value
-    if (id) executeMove(id, x, y)
-  }
+    const cardId = event.dataTransfer?.getData('cardId')
+    if (!cardId) return
 
-  const handleTapSelect = (card: FairyCard) => {
-    // If clicking the same card, deselect it. Otherwise select the new one.
-    selectedCardId.value = selectedCardId.value === card.id ? null : card.id
-  }
-
-  const handleSlotTap = (x: number, y: number) => {
-    if (selectedCardId.value) {
-      executeMove(selectedCardId.value, x, y)
+    const card = playerHand.value.find((c) => c.id === cardId)
+    if (card) {
+      const success = placeCard(card, x, y)
+      if (success) {
+        selectedCardId.value = null
+      }
     }
   }
 
-  const executeMove = (id: string, x: number, y: number) => {
-    const index = playerHand.value.findIndex(c => c.id === id)
-    if (index !== -1) {
-      const card = playerHand.value[index]
-      if (placeCard(card, x, y)) {
-        playerHand.value.splice(index, 1)
+  /**
+   * Mobile/Tap support: Selecting a card in hand.
+   * Fixes the "Object instead of String" warning.
+   */
+  const handleTapSelect = (cardId: string) => {
+    // If the incoming cardId is accidentally an object, extract the id
+    const id = typeof cardId === 'object' ? (cardId as any).id : cardId
+
+    // Toggle selection: if already selected, deselect.
+    selectedCardId.value = selectedCardId.value === id ? null : id
+  }
+
+  /**
+   * Mobile/Tap support: Placing the selected card on the board.
+   */
+  const handleSlotTap = (x: number, y: number) => {
+    if (!selectedCardId.value) return
+
+    const card = playerHand.value.find((c) => c.id === selectedCardId.value)
+    if (card) {
+      const success = placeCard(card, x, y)
+      if (success) {
         selectedCardId.value = null
       }
     }

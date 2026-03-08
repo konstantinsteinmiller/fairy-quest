@@ -1,29 +1,29 @@
-import {ref, computed} from 'vue'
-import type {FairyCard, BoardSlot} from '@/types/game'
+import { ref, computed } from 'vue'
+import type { FairyCard, BoardSlot } from '@/types/game'
 import { useModels } from '@/use/useModels'
 
 export const useMatch = () => {
+  const difficulty = ref<'easy' | 'medium' | 'hard'>('medium')
   const turn = ref<'player' | 'npc'>('player')
   const playerHand = ref<FairyCard[]>([])
   const npcHand = ref<FairyCard[]>([])
-  const {fairyModels} = useModels()
+  const { fairyModels } = useModels()
 
-  const board = ref<BoardSlot[][]>(Array.from({length: 3}, (_, y) =>
-    Array.from({length: 3}, (_, x) => ({x, y, card: null}))
+  const board = ref<BoardSlot[][]>(Array.from({ length: 3 }, (_, y) =>
+    Array.from({ length: 3 }, (_, x) => ({ x, y, card: null }))
   ))
 
-  // Added: Logic to check if the board is full
   const isBoardFull = computed(() => {
     return board.value.every(row => row.every(slot => slot.card !== null))
   })
 
   const generateRandomCard = (owner: 'player' | 'npc'): FairyCard => {
     const randomFairy = Math.floor(Math.random() * fairyModels.length)
-    const fairyName = fairyModels[randomFairy]?.name
+    const fairyModel = fairyModels[randomFairy]
 
     return {
       id: Math.random().toString(36).substring(2, 9),
-      name: `${fairyName}`,
+      name: `${fairyModel?.name || 'Fairy'}`,
       values: {
         top: Math.floor(Math.random() * 9) + 1,
         right: Math.floor(Math.random() * 9) + 1,
@@ -31,7 +31,7 @@ export const useMatch = () => {
         left: Math.floor(Math.random() * 9) + 1
       },
       owner,
-      image: `/models/${fairyModels[randomFairy]?.model}/preview_400x400.webp`
+      image: `/models/${fairyModel?.model}/preview_400x400.webp`
     }
   }
 
@@ -39,24 +39,24 @@ export const useMatch = () => {
     board.value.forEach(row => row.forEach(slot => {
       slot.card = null
     }))
-    playerHand.value = Array.from({length: 5}, () => generateRandomCard('player'))
-    npcHand.value = Array.from({length: 5}, () => generateRandomCard('npc'))
+    playerHand.value = Array.from({ length: 5 }, () => generateRandomCard('player'))
+    npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
     turn.value = 'player'
   }
 
   const evaluateCapture = (x: number, y: number) => {
     const attackerSlot = board.value[y][x]
     const attackerCard = attackerSlot.card
-    if (!attackerCard) return
+    if (!attackerCard || typeof attackerCard !== 'object') return
 
     const adjacents = [
-      {dy: -1, dx: 0, atk: 'top', def: 'bottom'},
-      {dy: 1, dx: 0, atk: 'bottom', def: 'top'},
-      {dy: 0, dx: 1, atk: 'right', def: 'left'},
-      {dy: 0, dx: -1, atk: 'left', def: 'right'}
+      { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
+      { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
+      { dy: 0, dx: 1, atk: 'right', def: 'left' },
+      { dy: 0, dx: -1, atk: 'left', def: 'right' }
     ]
 
-    adjacents.forEach(({dy, dx, atk, def}) => {
+    adjacents.forEach(({ dy, dx, atk, def }) => {
       const targetY = y + dy
       const targetX = x + dx
 
@@ -78,14 +78,25 @@ export const useMatch = () => {
 
   const placeCard = (card: FairyCard, x: number, y: number) => {
     if (board.value[y][x].card) return false
+
+    // Remove from hand (Single Source of Truth)
+    if (card.owner === 'player') {
+      playerHand.value = playerHand.value.filter(c => c.id !== card.id)
+    } else {
+      npcHand.value = npcHand.value.filter(c => c.id !== card.id)
+    }
+
     board.value[y][x].card = card
     evaluateCapture(x, y)
+
+    // Switch turns
     turn.value = turn.value === 'player' ? 'npc' : 'player'
     return true
   }
 
   return {
     turn,
+    difficulty,
     playerHand,
     npcHand,
     board,

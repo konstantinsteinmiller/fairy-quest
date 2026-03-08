@@ -2,14 +2,13 @@
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="select-none landscape:p-0.5 md:p-4"
   )
-    //- Victory/Defeat Modal
     GameOverModal(
       :is-open="isGameOver"
       :scores="scores"
       @reset="resetGame"
+      @backToMainMenu="emit('backToMainMenu')"
     )
 
-    //- Top Score Bar
     ScoreBoard(
       :board="board"
       :player-hand="playerHand"
@@ -80,31 +79,26 @@ import FairyCardDisplay from '@/components/FairyCardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
 import GameOverModal from '@/components/GameOverModal'
 
-const { turn, playerHand, npcHand, board, resetGame, placeCard } = useMatch()
+const emit = defineEmits(['backToMainMenu'])
+
+const { turn, difficulty, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = useMatch()
 const { selectedCardId, handleDragStart, handleDrop, handleTapSelect, handleSlotTap } = useInteraction(playerHand, placeCard)
 
-useNPC(turn, npcHand, board, placeCard)
-
-// Determine if the game is over
-const isGameOver = computed(() => {
-  return board.value.flat().every(slot => slot.card !== null)
-})
-
-const scores = computed(() => {
-  let playerScore = playerHand.value.length
-  let npcScore = npcHand.value.length
-  board.value.forEach(row => {
-    row.forEach(slot => {
-      if (slot.card) {
-        slot.card.owner === 'player' ? playerScore++ : npcScore++
-      }
-    })
-  })
-  return { player: playerScore, npc: npcScore }
-})
+useNPC(turn, npcHand, board, placeCard, difficulty)
 
 onMounted(() => {
   resetGame()
+})
+
+const isGameOver = computed(() => isBoardFull.value)
+
+const scores = computed(() => {
+  let pS = playerHand.value.length
+  let nS = npcHand.value.length
+  board.value.forEach(row => row.forEach(slot => {
+    if (slot.card) slot.card.owner === 'player' ? pS++ : nS++
+  }))
+  return { player: pS, npc: nS }
 })
 </script>
 

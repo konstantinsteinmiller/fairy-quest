@@ -1,50 +1,88 @@
-import {watch} from 'vue'
-import type {FairyCard, BoardSlot} from '@/types/game'
+import { watch, type Ref } from 'vue'
+import type { FairyCard, BoardSlot, GameTurn } from '@/types/game'
 
-/**
- * NPC AI Logic
- * @param turn - Ref to the current turn state
- * @param hand - Ref to the NPC's card hand
- * @param board - Ref to the 3x3 game board
- * @param placeCard - The placement function from useMatch
- */
 export const useNPC = (
-  turn: { value: 'player' | 'npc' },
-  hand: { value: FairyCard[] },
-  board: { value: BoardSlot[][] },
-  placeCard: (card: FairyCard, x: number, y: number) => boolean
+  turn: Ref<GameTurn>,
+  npcHand: Ref<FairyCard[]>,
+  board: Ref<BoardSlot[][]>,
+  placeCard: (card: FairyCard, x: number, y: number) => void,
+  difficulty: Ref<'easy' | 'medium' | 'hard'>
 ) => {
+  const makeMove = () => {
+    if (turn.value !== 'npc' || npcHand.value.length === 0) return
 
-  const performMove = () => {
-    // 1. Collect all valid empty slots
-    const emptySlots: { x: number, y: number }[] = []
-    board.value.forEach((row, y) => {
-      row.forEach((slot, x) => {
-        if (!slot.card) emptySlots.push({x, y})
+    // Artificial delay for "thinking"
+    setTimeout(() => {
+      const bestMove = calculateBestMove()
+      if (bestMove) {
+        const cardToPlace = npcHand.value.find(c => c.id === bestMove.cardId)
+        if (cardToPlace) {
+          placeCard(cardToPlace, bestMove.x, bestMove.y)
+        }
+      }
+    }, Math.random() * 500 + 500)
+  }
+
+  const calculateBestMove = () => {
+    const moves: { cardId: string; x: number; y: number; score: number }[] = []
+
+    // Map out every possible move
+    npcHand.value.forEach((card) => {
+      board.value.forEach((row, y) => {
+        row.forEach((slot, x) => {
+          if (!slot.card) {
+            moves.push({ cardId: card.id, x, y, score: 0 })
+          }
+        })
       })
     })
 
-    // 2. If board is full or hand is empty, NPC can't move
-    if (emptySlots.length === 0 || hand.value.length === 0) return
-
-    // 3. Simple AI Strategy: Pick a random slot and its first card
-    // Note: The owner change in useMatch will trigger the 3D CSS flip automatically
-    const targetSlot = emptySlots[Math.floor(Math.random() * emptySlots.length)]
-    const npcCard = hand.value[0]
-
-    // 4. Place the card
-    const success = placeCard(npcCard, targetSlot.x, targetSlot.y)
-
-    if (success) {
-      hand.value.shift() // Remove the card from NPC hand only if placement succeeded
+    if (difficulty.value === 'easy') {
+      return moves[Math.floor(Math.random() * moves.length)]
     }
+
+    // Evaluate moves for Medium/Hard
+    moves.forEach((move) => {
+      const card = npcHand.value.find(c => c.id === move.cardId)!
+      let captures = 0
+
+      const adjacents = [
+        { dx: 0, dy: -1, side: 'top' as const, opp: 'bottom' as const },
+        { dx: 0, dy: 1, side: 'bottom' as const, opp: 'top' as const },
+        { dx: -1, dy: 0, side: 'left' as const, opp: 'right' as const },
+        { dx: 1, dy: 0, side: 'right' as const, opp: 'left' as const }
+      ]
+
+      adjacents.forEach((adj) => {
+        const nx = move.x + adj.dx
+        const ny = move.y + adj.dy
+        if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
+          const target = board.value[ny][nx].card
+          if (target && target.owner === 'player') {
+            if (card.values[adj.side] > target.values[adj.opp]) {
+              captures++
+            }
+          }
+        }
+      })
+
+      move.score = captures
+
+      // Hard Mode: Strategic positioning
+      if (difficulty.value === 'hard') {
+        if ((move.x === 0 || move.x === 2) && (move.y === 0 || move.y === 2)) move.score += 0.6
+        else if (move.x === 0 || move.x === 2 || move.y === 0 || move.y === 2) move.score += 0.3
+
+        if (move.x === 1 && move.y === 1) move.score -= 0.1
+      }
+    })
+
+    // Sort by score (descending) and take the best
+    moves.sort((a, b) => b.score - a.score)
+    return moves[0]
   }
 
-  // Watch for turn changes
   watch(turn, (newTurn) => {
-    if (newTurn === 'npc') {
-      // Small delay to make it feel like the AI is "thinking"
-      setTimeout(performMove, 1200)
-    }
-  })
+    if (newTurn === 'npc') makeMove()
+  }, { immediate: true })
 }

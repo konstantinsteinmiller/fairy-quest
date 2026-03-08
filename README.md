@@ -14,22 +14,25 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
 - [x] basic game field
 - [x] static selected cards
-    - [ ] select cards from card stash
     - [x] drag and drop for a card
     - [x] tap to select a card and place
 - [ ] Npc logic
     - [x] random choice
     - [ ] smart choice
+    - [ ] different difficulty levels
 - [ ] Fairy Models
     - [x] load fairy images
+    - [ ] balanced card values
     - [ ] add frames to Cards
         - [ ] selected card frame
         - [x] not-selected card frame
-- [ ] GameOverModal
+- [x] GameOverModal
     - [x] show winner / loser / draw
     - [x] restart game button
-    - [ ] frame
+    - [x] frame
 - [ ] Cards can also attack diagonally
+- [ ] Trading Rules + Battle rules
+- [ ] Card selection Page
 - [ ] Card Designer from Fairy Dust
 
 ## Bugs
