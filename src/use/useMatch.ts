@@ -25,7 +25,8 @@ export const useMatch = () => {
     const card = allCards[randomModel]
 
     return {
-      id: Math.random().toString(36).substring(2, 9),
+      id: card.id, // The base model ID
+      instanceId: Math.random().toString(36).substring(2, 11), // Unique instance ID for every card object
       name: `${card?.name || 'Fairy'}`,
       values: { ...card.values },
       owner,
@@ -37,8 +38,11 @@ export const useMatch = () => {
     board.value.forEach(row => row.forEach(slot => {
       slot.card = null
     }))
+
+    // Create shallow copies of selection to ensure fresh objects
     playerHand.value = [...playerSelection.value]
-    // Array.from({ length: 5 }, () => generateRandomCard('player'))
+
+    // Generate NPC cards with unique instanceIds
     npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
     turn.value = 'player'
   }
@@ -78,11 +82,11 @@ export const useMatch = () => {
   const placeCard = (card: GameCard, x: number, y: number) => {
     if (board.value[y][x].card) return false
 
-    // Remove from hand (Single Source of Truth)
+    // Remove from hand using instanceId to ensure we target ONLY the placed card
     if (card.owner === 'player') {
-      playerHand.value = playerHand.value.filter(c => c.id !== card.id)
+      playerHand.value = playerHand.value.filter(c => c.instanceId !== card.instanceId)
     } else {
-      npcHand.value = npcHand.value.filter(c => c.id !== card.id)
+      npcHand.value = npcHand.value.filter(c => c.instanceId !== card.instanceId)
     }
 
     board.value[y][x].card = card

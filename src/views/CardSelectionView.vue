@@ -52,10 +52,10 @@
             span.text-xl(class="sm:text-2xl") ▶
 
       //- Sidebar / Deck Dock
-      div.flex.flex-col.gap-2.justify-center.items-center.sidebar-container(
-        class="landscape:w-32 landscape:sm:w-40 landscape:md:w-48 portrait:h-28 portrait:w-full"
+      div.flex.flex-col.gap-1.justify-center.items-center.sidebar-container(
+        class="sm:gap-2 landscape:w-32 landscape:sm:w-40 landscape:md:w-48 portrait:h-28 portrait:w-full"
       )
-        div.flex.flex-col.items-center.w-full.h-full.deck-target.p-2(
+        div.flex.flex-col.items-center.w-full.h-full.deck-target(
           class="portrait:justify-center"
         )
           div.flex.flex-1.w-full.justify-center.relative.z-40.hand-interact-zone(

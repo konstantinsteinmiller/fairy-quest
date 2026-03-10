@@ -16,7 +16,8 @@ export const useNPC = (
     setTimeout(() => {
       const bestMove = calculateBestMove()
       if (bestMove) {
-        const cardToPlace = npcHand.value.find(c => c.id === bestMove.cardId)
+        // Find by instanceId to ensure we grab the specific unique card
+        const cardToPlace = npcHand.value.find(c => c.instanceId === bestMove.cardInstanceId)
         if (cardToPlace) {
           placeCard(cardToPlace, bestMove.x, bestMove.y)
         }
@@ -25,14 +26,14 @@ export const useNPC = (
   }
 
   const calculateBestMove = () => {
-    const moves: { cardId: string; x: number; y: number; score: number }[] = []
+    const moves: { cardInstanceId: string; x: number; y: number; score: number }[] = []
 
     // Map out every possible move
     npcHand.value.forEach((card) => {
       board.value.forEach((row, y) => {
         row.forEach((slot, x) => {
           if (!slot.card) {
-            moves.push({ cardId: card.id, x, y, score: 0 })
+            moves.push({ cardInstanceId: card.instanceId!, x, y, score: 0 })
           }
         })
       })
@@ -44,7 +45,7 @@ export const useNPC = (
 
     // Evaluate moves for Medium/Hard
     moves.forEach((move) => {
-      const card = npcHand.value.find(c => c.id === move.cardId)!
+      const card = npcHand.value.find(c => c.instanceId === move.cardInstanceId)!
       let captures = 0
 
       const adjacents = [

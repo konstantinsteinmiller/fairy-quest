@@ -1,5 +1,4 @@
 <template lang="pug">
-  //- The actual Game Field
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
   )
@@ -15,7 +14,6 @@
       :npc-hand="npcHand"
     )
 
-    //- Main Game Layout
     div.flex.items-center.justify-center.w-full.h-full.gap-1(
       class="flex-col landscape:flex-row lg:flex-row lg:gap-8"
     )
@@ -39,7 +37,10 @@
                 @dragover.prevent
                 @drop="turn === 'player' && handleDrop($event, x, y)"
                 @click="turn === 'player' && handleSlotTap(x, y)"
-                :class="[(!slot.card && turn === 'player') ? 'cursor-pointer' : '']"
+                :class="[\
+                  (!slot.card && turn === 'player') ? 'cursor-pointer' : '',\
+                  (errorSlot?.x === x && errorSlot?.y === y) ? 'shake-error' : ''\
+                ]"
               )
                 img.absolute.inset-0(v-if="(y + x) % 2 === 0" src="/images/board/field-outer_256x256.webp")
                 img.absolute.inset-0(v-else src="/images/board/field-inner_256x256.webp")
@@ -58,11 +59,10 @@
           :cards="playerHand"
           :is-active="turn === 'player'"
           :selected-id="selectedCardId"
-          @dragstart="(e, id) => turn === 'player' && handleDragStart(e, id)"
-          @select="(id) => turn === 'player' && handleTapSelect(id)"
+          @dragstart="(e, instanceId) => turn === 'player' && handleDragStart(e, instanceId)"
+          @select="(instanceId) => turn === 'player' && handleTapSelect(instanceId)"
         )
 
-    //- Manual Reset Button
     button.absolute.bottom-4.right-4.bg-slate-800.rounded-full(
       @click="resetGame"
       class="p-2 opacity-40 hover:opacity-100 transition-opacity z-50 md:p-4 md:bottom-8 md:right-8"
@@ -86,6 +86,7 @@ const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = 
 const { userDifficulty } = useUser()
 const {
   selectedCardId,
+  errorSlot,
   handleDragStart,
   handleDrop,
   handleTapSelect,
@@ -121,11 +122,9 @@ const scores = computed(() => {
 :root
   --board-card-size: 31vw
   --hand-card-size: 18.5vw
-
   @media (orientation: landscape)
     --board-card-size: 24vh
     --hand-card-size: 15.5vh
-
   @media (min-width: 1024px)
     --board-card-size: 180px
     --hand-card-size: 140px
@@ -136,6 +135,22 @@ const scores = computed(() => {
   display: flex
   align-items: stretch
   justify-content: stretch
+  transition: all 0.2s ease
+
+.shake-error
+  animation: shake-anim 0.4s cubic-bezier(.36, .07, .19, .97) both
+  border: 2px solid rgba(239, 68, 68, 0.7)
+  z-index: 50
+
+@keyframes shake-anim
+  10%, 90%
+    transform: translate3d(-1px, 0, 0)
+  20%, 80%
+    transform: translate3d(2px, 0, 0)
+  30%, 50%, 70%
+    transform: translate3d(-4px, 0, 0)
+  40%, 60%
+    transform: translate3d(4px, 0, 0)
 
 .game-card
   width: 100%
@@ -144,10 +159,6 @@ const scores = computed(() => {
 .hand-container
   min-height: var(--hand-card-size)
   min-width: var(--hand-card-size)
-
-  .game-card
-    width: var(--hand-card-size)
-    height: var(--hand-card-size)
 
 .touch-none
   touch-action: none

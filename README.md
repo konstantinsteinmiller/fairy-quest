@@ -4,7 +4,6 @@ A fairy card battle game
 
 WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
-
 ![Card Quest menu](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/main-menu.webp)
 
 ![NPC Card Selection](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/deck-selection.webp)
@@ -12,9 +11,11 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 ![NPC Game](https://github.com/konstantinsteinmiller/fairy-quest/blob/main/src/assets/documentation/gameplay.webp)
 
 # Todo
+
 - [x] basic game field
   - [x] background image
   - [x] grid images
+  - [x] visual error shake on wrong placement
 - [x] static selected cards
     - [x] drag and drop for a card
     - [x] tap to select a card and place
@@ -26,8 +27,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
     - [x] load fairy images
   - [x] balanced card values
     - [x] add frames to Cards
-        - [x] selected card frame
-        - [x] not-selected card frame
+      - [x] selected card frame
+      - [x] not-selected card frame
 - [x] GameOverModal
     - [x] show winner / loser / draw
     - [x] restart game button
@@ -40,14 +41,18 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 - [ ] Cards can also attack diagonally
 - [ ] Trading Rules + Battle rules
 - [x] Card selection Page
+  - [x] animate card selection
 - [ ] Card Designer from Fairy Dust
 
 ## Bugs
 
-- [ ] double selection if card is multiple times in player hand
+- [x] double selection if card is multiple times in player hand
+- [x] mobile layout changes on landscape
 
 ## Nice-to-have
+
 - [ ] 
 
 ## NPC Algo:
+
 - [ ] 

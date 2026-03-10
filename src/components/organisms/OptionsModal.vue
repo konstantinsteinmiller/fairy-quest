@@ -17,7 +17,7 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import useMatch from '@/use/useMatch'
+import { useMatch } from '@/use/useMatch'
 import useUser from '@/use/useUser'
 import Modal from '@/components/molecules/Modal'
 import FButton from '@/components/atoms/FButton'

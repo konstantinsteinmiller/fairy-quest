@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import useMatch from '@/use/useMatch'
+import { useMatch } from '@/use/useMatch'
 import clonedeep from 'lodash.clonedeep'
 
 const { isSplashScreenVisible, isDbInitialized } = useMatch()

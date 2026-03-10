@@ -9,16 +9,16 @@
       //- Loop for the actual cards
       div.card-wrapper.relative(
         v-for="card in cards"
-        :key="card.id"
+        :key="card.instanceId"
         class="transition-all duration-300"
         :class="[\
-        selectedId === card.id ? '-translate-y-3 z-20 scale-105' : 'hover:scale-105 hover:-translate-y-1 z-10',\
-        !isActive ? 'grayscale-[40%] cursor-not-allowed' : ''\
-      ]"
+          selectedId === card.instanceId ? '-translate-y-3 z-20 scale-105' : 'hover:scale-105 hover:-translate-y-1 z-10',\
+          !isActive ? 'grayscale-[40%] cursor-not-allowed' : ''\
+        ]"
       )
-        //- The pulsing magical aura glow (Moved behind the card via z-index)
+        //- The pulsing magical aura glow
         div.absolute.rounded-lg.pointer-events-none.transition-opacity.duration-500(
-          v-if="selectedId === card.id"
+          v-if="selectedId === card.instanceId"
           class="bg-blue-800/90 blur-xl animate-pulse z-0 inset-[-10px]"
         )
 
@@ -26,20 +26,20 @@
         CardDisplay(
           :card="card"
           :draggable="isActive"
-          @dragstart="emit('dragstart', $event, card.id)"
-          @click.stop="isActive && emit('select', card.id)"
+          @dragstart="emit('dragstart', $event, card.instanceId)"
+          @click.stop="isActive && emit('select', card.instanceId)"
           class="cursor-grab relative z-10"
         )
 
-        //- The selected ring overlay (Stays on top)
+        //- The selected ring overlay
         div.absolute.inset-0.pointer-events-none.z-20(
-          v-if="selectedId === card.id"
+          v-if="selectedId === card.instanceId"
           class="ring-4 ring-blue-400 rounded-lg shadow-[0_0_20px_rgba(96,165,250,0.8)]"
         )
 
         //- Floating Indicator Arrow
         div.absolute.-top-10.z-30.animate-bounce(
-          v-if="selectedId === card.id"
+          v-if="selectedId === card.instanceId"
           class="left-1/2 -translate-x-1/2"
         )
           span.text-blue-400.text-2xl ▼
@@ -65,7 +65,6 @@ const emit = defineEmits<{
 .card-wrapper
   width: var(--hand-card-size)
   height: var(--hand-card-size)
-  // We remove overflow: hidden if it exists on any parent to allow the glow to spread
 
   :deep(.game-card)
     @apply w-full h-full

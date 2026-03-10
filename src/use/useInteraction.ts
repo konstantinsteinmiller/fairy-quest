@@ -5,70 +5,60 @@ export const useInteraction = (
   playerHand: Ref<GameCard[]>,
   placeCard: (card: GameCard, x: number, y: number) => boolean
 ) => {
-  // This ref MUST only store the string ID, not the object
   const selectedCardId = ref<string | null>(null)
+  const errorSlot = ref<{ x: number, y: number } | null>(null)
 
-  /**
-   * Triggered when starting a drag.
-   * Ensure we only pass and store the ID.
-   */
-  const handleDragStart = (event: DragEvent, cardId: string) => {
-    // Safety check: ensure we are receiving a string
-    const id = typeof cardId === 'object' ? (cardId as any).id : cardId
-
-    if (event.dataTransfer) {
-      event.dataTransfer.setData('cardId', id)
-      event.dataTransfer.dropEffect = 'move'
-    }
-
-    selectedCardId.value = id
+  const triggerError = (x: number, y: number) => {
+    errorSlot.value = { x, y }
+    setTimeout(() => {
+      errorSlot.value = null
+    }, 500)
   }
 
-  /**
-   * Triggered when dropping a card onto a game-slot.
-   */
-  const handleDrop = (event: DragEvent, x: number, y: number) => {
-    const cardId = event.dataTransfer?.getData('cardId')
-    if (!cardId) return
+  const handleDragStart = (event: DragEvent, cardInstanceId: string) => {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('cardInstanceId', cardInstanceId)
+      event.dataTransfer.dropEffect = 'move'
+    }
+    selectedCardId.value = cardInstanceId
+  }
 
-    const card = playerHand.value.find((c) => c.id === cardId)
+  const handleDrop = (event: DragEvent, x: number, y: number) => {
+    const instanceId = event.dataTransfer?.getData('cardInstanceId')
+    if (!instanceId) return
+
+    const card = playerHand.value.find((c) => c.instanceId === instanceId)
     if (card) {
       const success = placeCard(card, x, y)
       if (success) {
         selectedCardId.value = null
+      } else {
+        triggerError(x, y)
       }
     }
   }
 
-  /**
-   * Mobile/Tap support: Selecting a card in hand.
-   * Fixes the "Object instead of String" warning.
-   */
-  const handleTapSelect = (cardId: string) => {
-    // If the incoming cardId is accidentally an object, extract the id
-    const id = typeof cardId === 'object' ? (cardId as any).id : cardId
-
-    // Toggle selection: if already selected, deselect.
-    selectedCardId.value = selectedCardId.value === id ? null : id
+  const handleTapSelect = (cardInstanceId: string) => {
+    selectedCardId.value = selectedCardId.value === cardInstanceId ? null : cardInstanceId
   }
 
-  /**
-   * Mobile/Tap support: Placing the selected card on the board.
-   */
   const handleSlotTap = (x: number, y: number) => {
     if (!selectedCardId.value) return
 
-    const card = playerHand.value.find((c) => c.id === selectedCardId.value)
+    const card = playerHand.value.find((c) => c.instanceId === selectedCardId.value)
     if (card) {
       const success = placeCard(card, x, y)
       if (success) {
         selectedCardId.value = null
+      } else {
+        triggerError(x, y)
       }
     }
   }
 
   return {
     selectedCardId,
+    errorSlot,
     handleDragStart,
     handleDrop,
     handleTapSelect,
