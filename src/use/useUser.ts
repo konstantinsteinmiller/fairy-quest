@@ -13,6 +13,7 @@ const tutorialPhase: Ref<string> = ref('')
 const allowTutorial: Ref<boolean> = ref(true)
 const isOptionsModalOpen: Ref<boolean> = ref(false)
 const userHand: Ref<any> = ref('[]')
+const userCampaign: Ref<any> = ref('[]')
 
 /* just for after the indexDB has loaded */
 watch(
@@ -31,7 +32,8 @@ const { storeUser } = useUserDb({
   userMusicVolume,
   userLanguage,
   userTutorialsDoneMap,
-  userHand
+  userHand,
+  userCampaign
 })
 
 const useUser = () => {
@@ -55,6 +57,9 @@ const useUser = () => {
       case 'hand':
         userHand.value = JSON.stringify(value)
         break
+      case 'campaign':
+        userCampaign.value = JSON.stringify(value)
+        break
     }
 
     storeUser({
@@ -63,7 +68,8 @@ const useUser = () => {
       userMusicVolume: +userMusicVolume.value,
       userLanguage: userLanguage.value,
       userTutorialsDoneMap: userTutorialsDoneMap.value,
-      userHand: userHand.value
+      userHand: userHand.value,
+      userCampaign: userCampaign.value
     })
   }
 
@@ -74,6 +80,7 @@ const useUser = () => {
     userLanguage,
     userTutorialsDoneMap,
     userHand,
+    userCampaign,
     tutorialPhase,
     allowTutorial,
     setSettingValue,

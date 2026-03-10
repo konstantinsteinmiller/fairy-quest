@@ -12,7 +12,8 @@ const useUserDb = ({
                      userMusicVolume,
                      userLanguage,
                      userTutorialsDoneMap,
-                     userHand
+                     userHand,
+                     userCampaign
                    }: {
   userDifficulty: Ref<string>
   userSoundVolume: Ref<number>
@@ -20,6 +21,7 @@ const useUserDb = ({
   userLanguage: Ref<string>
   userTutorialsDoneMap: Ref<string>
   userHand: Ref<string>
+  userCampaign: Ref<string>
 }) => {
   // Open our database; it is created if it doesn't already exist
   const request = window.indexedDB.open('user_db', 1)
@@ -50,6 +52,7 @@ const useUserDb = ({
     objectStore.createIndex('userLanguage', 'userLanguage', { unique: false })
     objectStore.createIndex('userTutorialsDoneMap', 'userTutorialsDoneMap', { unique: false })
     objectStore.createIndex('userHand', 'userHand', { unique: false })
+    objectStore.createIndex('userCampaign', 'userCampaign', { unique: false })
     // console.log('Database setup complete')
   })
 
@@ -71,6 +74,9 @@ const useUserDb = ({
         if (request.result.userHand) {
           userHand.value = JSON.parse(request.result.userHand)
         }
+        if (request.result.userCampaign) {
+          userCampaign.value = JSON.parse(request.result.userCampaign)
+        }
       } else {
         storeUser({
           userDifficulty: userDifficulty.value,
@@ -78,7 +84,8 @@ const useUserDb = ({
           userMusicVolume: userMusicVolume.value,
           userLanguage: userLanguage.value,
           userTutorialsDoneMap: userTutorialsDoneMap.value,
-          userHand: userHand.value
+          userHand: userHand.value,
+          userCampaign: userCampaign.value
         })
       }
       isDbInitialized.value = true
@@ -99,6 +106,10 @@ const useUserDb = ({
     if (Object.keys(params.userHand)?.length) {
       const clone = clonedeep(params.userHand)
       params.userHand = JSON.stringify(clone)
+    }
+    if (Object.keys(params.userCampaign)?.length) {
+      const clone = clonedeep(params.userCampaign)
+      params.userCampaign = JSON.stringify(clone)
     }
     if (Object.keys(params.userTutorialsDoneMap)?.length) {
       const clone = clonedeep(params.userTutorialsDoneMap)

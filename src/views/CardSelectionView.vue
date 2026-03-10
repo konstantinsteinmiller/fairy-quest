@@ -77,8 +77,8 @@
             class="sm:text-sm"
             :disabled="selectedDeck.length < 5"
             :class="{ 'is-ready': selectedDeck.length === 5, 'opacity-50 grayscale': selectedDeck.length < 5 }"
-            @click="startMatch"
-          ) {{ t('battle') }} ({{ selectedDeck.length }}/5)
+            @click="onNext"
+          ) {{ t(isCampaignMatch ? 'ready' : 'battle') }} ({{ selectedDeck.length }}/5)
 </template>
 
 <script setup lang="ts">
@@ -89,9 +89,9 @@ import type { GameCard } from '@/types/game'
 import FButton from '@/components/atoms/FButton'
 import CardDisplay from '@/components/CardDisplay'
 import PlayerHandCard from '@/components/PlayerHandCard'
-import { playerSelection } from '@/use/useMatch'
+import { playerSelection, isCampaignMatch } from '@/use/useMatch'
 import { modelImgPath, useModels } from '@/use/useModels'
-import useUser from '@/use/useUser.ts'
+import useUser from '@/use/useUser'
 
 const { setSettingValue, userHand } = useUser()
 const { t } = useI18n()
@@ -211,10 +211,15 @@ const nextPage = () => {
 const prevPage = () => {
   if (currentPage.value > 0) currentPage.value--
 }
-const startMatch = () => {
+const onNext = () => {
   playerSelection.value = [...selectedDeck.value]
   setSettingValue('hand', [...selectedDeck.value])
-  router.push({ name: 'match' })
+
+  if (isCampaignMatch.value) {
+    router.push({ name: 'campaign' })
+  } else {
+    router.push({ name: 'match' })
+  }
 }
 </script>
 
@@ -275,3 +280,14 @@ const startMatch = () => {
       &:first-child
         margin-top: 0
 </style>
+
+<i18n>
+en:
+  back: "Back"
+  ready: "Ready"
+  battle: "Battle"
+de:
+  back: "Zurück"
+  ready: "Bereit"
+  battle: "Kampf"
+</i18n>

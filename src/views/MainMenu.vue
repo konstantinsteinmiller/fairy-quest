@@ -8,7 +8,8 @@
     )
       // Menu
       div.flex.flex-col.gap-4.relative.z-10
-        FButton(@click="router.push({ name: 'card-selection' })") {{ t('play') }}
+        FButton(@click="router.push({ name: 'deck' })") {{ t('play') }}
+        FButton(@click="onCampaign") {{ t('campaign') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
         //FButton(v-if="!isWeb" class="secondary" @click="quitGame") {{ t('quit') }}
 
@@ -29,10 +30,11 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
-import OptionsModal from '@/components/organisms/OptionsModal.vue'
-import FButton from '@/components/atoms/FButton.vue'
-import FModal from '@/components/atoms/FModal.vue'
-import { isWeb } from '@/utils/function.ts'
+import OptionsModal from '@/components/organisms/OptionsModal'
+import FButton from '@/components/atoms/FButton'
+import FModal from '@/components/atoms/FModal'
+import { isWeb } from '@/utils/function'
+import { isCampaignMatch } from '@/use/useMatch'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -43,7 +45,10 @@ const showOptions = ref(false)
 const quitGame = () => {
   if (window.confirm(t('confirmQuit'))) window.close()
 }
-
+const onCampaign = () => {
+  isCampaignMatch.value = true
+  router.push({ name: 'deck' })
+}
 </script>
 
 <style lang="sass" scoped>
@@ -54,11 +59,13 @@ const quitGame = () => {
 <i18n>
 en:
   play: "Play"
+  campaign: "Campaign"
   settings: "Settings"
   quit: "Abandon"
   confirmQuit: "Do you wish to leave the realm?"
 de:
   play: "Spielen"
+  campaign: "Kampagne"
   settings: "Einstellungen"
   quit: "Aufgeben"
   confirmQuit: "Möchtest du das Reich verlassen?"

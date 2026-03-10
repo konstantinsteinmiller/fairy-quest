@@ -7,6 +7,7 @@ interface Props {
   colorFrom?: string;
   colorTo?: string;
   shadowColor?: string;
+  size?: 'sm|md|lg|xl';
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,7 +24,7 @@ const theme = computed(() => {
       from: props.colorFrom ?? '#50aaff', // Light Blue
       to: props.colorTo ?? '#2266ff',     // Darker Blue
       shadow: props.shadowColor ?? '#102e7a'
-    };
+    }
   }
   // Default Primary (Brawl Stars Yellow)
   return {
@@ -38,6 +39,12 @@ const theme = computed(() => {
   button(
     type="button"
     @click="$emit('click')"
+    :class="{\
+      'scale-60' : size === 'sm',\
+      'scale-80' : size === 'md',\
+      'scale-110' : size === 'lg',\
+      'scale-120' : size === 'xl'\
+    }"
     class="group relative inline-block cursor-pointer select-none transition-all duration-75 active:scale-x-[95%] active:scale-y-[90%] active:brightness-110 touch-manipulation"
   )
     //- The "Bottom Shadow" / 3D Depth

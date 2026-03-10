@@ -29,8 +29,4 @@ onMounted(() => {
 
 img
   pointer-events: none
-
-p
-  color: blue
-$color: red
 </style>

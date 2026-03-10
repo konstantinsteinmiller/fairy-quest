@@ -4,6 +4,8 @@ import { useModels, modelImgPath } from '@/use/useModels'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
+export const isCampaignMatch = ref<boolean>(false)
+
 export const playerSelection = ref<GameCard[]>([])
 export const playerHand = ref<GameCard[]>([])
 export const npcHand = ref<GameCard[]>([])

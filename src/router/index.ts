@@ -2,10 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import MainMenu from '@/views/MainMenu'
 import CardSelectionView from '@/views/CardSelectionView'
 import GameField from '@/views/GameField'
+import CampaignMap from '@/views/CampaignMap'
 
 const routes = [
   { path: '/', name: 'main-menu', component: MainMenu },
-  { path: '/card-selection', name: 'card-selection', component: CardSelectionView },
+  { path: '/deck', name: 'deck', component: CardSelectionView },
+  { path: '/campaign', name: 'campaign', component: CampaignMap },
   { path: '/match', name: 'match', component: GameField }
 ]
 
