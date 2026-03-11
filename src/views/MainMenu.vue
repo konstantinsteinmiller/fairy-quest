@@ -2,6 +2,9 @@
   div.h-screen.w-screen.bg-slate-200.flex.items-center.justify-center.p-4(class="bg-[url('/images/bg/bg_1024x1024.webp')] bg-cover bg-center")
     img.absolute(class="left-1/2 top-12 -translate-x-1/2 w-32 h-32 sm:top-4 sm:w-[8rem] sm:h-[8rem] md:w-[10rem] md:h-[10rem] landscape:left-2 landscape:top-2 landscape:-translate-x-0 landscape:md:left-1/2 landscape:md:top-12 landscape:md:-translate-x-1/2" src="/images/logo/logo_512x512.webp" alt="logo")
 
+    // Version
+    div.absolute.bottom-1.right-1.text-sm.text-slate-200.opacity-90.text-shadow  v.{{ version }}
+
     // Menu box
     div.relative.p-10.flex.flex-col.gap-4.text-center.shadow-2xl(
       class="bg-black/30 min-w-[320px] max-w-lg"
@@ -35,6 +38,7 @@ import FButton from '@/components/atoms/FButton'
 import FModal from '@/components/atoms/FModal'
 import { isWeb } from '@/utils/function'
 import { isCampaignMatch } from '@/use/useMatch'
+import { version } from '@/use/useUser'
 
 const router = useRouter()
 const { t } = useI18n()

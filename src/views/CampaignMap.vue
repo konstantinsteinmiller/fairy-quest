@@ -3,7 +3,7 @@
     //- 1. Backgrounds
     //- Oak texture fills the entire screen
     img.absolute.inset-0.w-full.h-full.object-cover.select-none(
-      src="/images/bg/oak_700x686.webp"
+      src="/images/bg/oak_600x588.webp"
       alt="table-image"
     )
     //- Map stays contained within the screen, keeping its proportions

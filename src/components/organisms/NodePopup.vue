@@ -2,9 +2,9 @@
   div.fixed.inset-0.z-50.flex.items-center.justify-center.p-4(
     @click.self="emit('close')"
   )
-    //- The Popover Content
-    div.relative.bg-slate-800.border-4.border-slate-600.rounded-2xl.w-full.max-w-xs.shadow-2xl(
-      class="transform transition-all animate-in zoom-in-95 duration-200"
+    //- The Popover Content.bg-slate-800
+    div.relative.border-4.border-slate-600.rounded-2xl.w-full.max-w-xs.shadow-2xl(
+      class="bg-black/80 transform transition-all animate-in zoom-in-95 duration-200"
     )
       //- Close Button (Top Right)
       FCloseButton.absolute.w-8.h-8.flex(

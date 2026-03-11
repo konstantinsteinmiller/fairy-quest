@@ -3,6 +3,7 @@ import type { Ref } from 'vue'
 import useUserDb from '@/use/useUserDb'
 import { type Difficulties, DIFFICULTY } from '@/utils/enums'
 
+export const version: string = import.meta.env.VITE_APP_VERSION
 const userDifficulty: Ref<Difficulties> = ref(DIFFICULTY.HARD)
 const userSoundVolume: Ref<number> = ref(0.7)
 const userMusicVolume: Ref<number> = ref(0.05)

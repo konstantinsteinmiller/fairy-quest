@@ -19,12 +19,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 - [x] static selected cards
     - [x] drag and drop for a card
     - [x] tap to select a card and place
+  - [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
 - [ ] Npc logic
     - [x] random choice
     - [x] smart choice
     - [x] different difficulty levels
-- [ ] Fairy Models
+- [x] Fairy Models
     - [x] load fairy images
+  - [x] elements in model
   - [x] balanced card values
     - [x] add frames to Cards
       - [x] selected card frame
@@ -38,11 +40,21 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
   - [x] create Logo
   - [x] settings button
   - [x] background image
-- [ ] Cards can also attack diagonally
+  - [x] campaign
+  - [ ] practice button
+- [ ] Campaign
+  - [x] Campaign map and jump of to battle
+  - [ ] connection lines between nodes
+  - [ ] Storyline
+  - [ ] different levels with different NPCs
+  - [ ] enemy shows known cards face up
+- [ ] Sound and bg music options
+- [ ] mute button on main menu
 - [ ] Trading Rules + Battle rules
 - [x] Card selection Page
   - [x] animate card selection
-- [ ] Card Designer from Fairy Dust
+  - [x] Name
+  - [ ] element
 
 ## Bugs
 
@@ -51,6 +63,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/fairy-quest/)
 
 ## Nice-to-have
 
+- [ ] Cards can also attack diagonally
+- [ ] Card Designer from Fairy Dust
 - [ ] 
 
 ## NPC Algo:

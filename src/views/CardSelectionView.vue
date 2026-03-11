@@ -15,7 +15,7 @@
         img.absolute.inset-0.w-full.h-full.object-fill(src="/images/bg/book_512x401.webp")
 
         div.flex-1.relative.z-10.ml-1.px-5.pt-14.flex.flex-wrap.justify-center.content-start.overflow-y-auto.cursor-pointer(
-          class="gap-x-10 gap-2 sm:gap-2 sm:gap-x-2 md:gap-4 md:px-12 md:pt-15"
+          class="gap-x-10 gap-3 sm:gap-3 sm:gap-x-2 md:gap-4 md:px-12 md:pt-15"
         )
           div.relative.group(
             v-for="card in paginatedCollection"
@@ -26,7 +26,7 @@
             :class="{ 'out-of-stock': card.count === 0 }"
           )
             div.w-full.h-full.transition-transform.duration-200(class="group-hover:scale-105 active:scale-95")
-              CardDisplay(:card="card" :show-tint="false")
+              CardDisplay(:card="card" :is-selection="true" :show-tint="false")
 
             div.counter-bubble.absolute.-bottom-1.-right-1.text-white.rounded-full.flex.items-center.justify-center.font-bold.z-20(
               class="w-4 h-4 text-[9px] sm:w-5 sm:h-5 sm:text-[10px]"

@@ -4,6 +4,9 @@
     div.w-full.h-full.relative.transition-transform.duration-700.transform-style-3d(
       :class="card.owner === 'player' ? 'rotate-y-0' : 'rotate-y-180'"
     )
+      div(v-if="isSelection").absolute.inset-0.-top-4.pointer-events-none.z-10
+        div.absolute.inset-0.text-shadow.text-amber-400.text-sm.text-center(
+          class="w-full h-auto") {{ card.name }}
       //- Single Card Face
       div.absolute.inset-0.backface-hidden.rounded-lg.shadow-lg.overflow-hidden(
         :class="[card.owner === 'player' ? '' : 'rotate-y-180']"
@@ -46,6 +49,7 @@ import type { GameCard } from '@/types/game'
 defineProps<{
   card: GameCard,
   showTint?: boolean
+  isSelection?: boolean
 }>()
 </script>
 
