@@ -7,7 +7,7 @@ import { createPlusTestScenario } from '@/../tests/fixtures/plusRuleHand'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
-export const ruleModal = ref<string | null>(null)
+export const ruleModal = ref<string | null | any>(null)
 export const isCampaignMatch = ref<boolean>(false)
 
 export const playerSelection = ref<GameCard[]>([])
@@ -52,7 +52,7 @@ export const useMatch = () => {
     playerHand.value = [...playerSelection.value]
     if (playerHand.value.length === 0) {
       //back to main menu
-      return router.replace({ name: 'deck', params: isCampaignMatch.value ? { campaign: true } : undefined })
+      return router.replace({ name: 'deck', query: isCampaignMatch.value ? { campaign: 'true' } : undefined })
     }
     npcHand.value = Array.from({ length: 5 }, () => generateRandomCard('npc'))
     turn.value = 'player'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 interface Props {
-  modelValue: boolean;
+  modelValue: boolean | any;
   title?: string;
   isClosable?: boolean;
 }

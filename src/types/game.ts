@@ -18,3 +18,5 @@ export interface BoardSlot {
   y: number
   card: GameCard | null
 }
+
+export type GameTurn = 'player' | 'npc'

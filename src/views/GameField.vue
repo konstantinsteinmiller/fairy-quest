@@ -95,7 +95,7 @@ const {
   handleSlotTap
 } = useInteraction(playerHand, placeCard)
 
-useNPC(turn, npcHand, board, placeCard, userDifficulty)
+useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules)
 
 const showRules = ref(false)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))

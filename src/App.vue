@@ -28,7 +28,7 @@ onMounted(() => {
   div.h-screen.w-screen.app-container
     RouterView
 
-    FModal.fixed(v-model="ruleModal" :title="t('rule.' + ruleModal)" class="z-[1010]")
+    FModal.fixed(v-model="ruleModal" :title="t('rule.' + ruleModal)" class="z-[200]")
       div.text-shadow.cursor-pointer.mt-2(class="text-[14px]")
         div.mb-4.text-left(class="text-[13px]") {{ t('rule-desc.' + ruleModal) }}
         div.icon.flex.justify-center.mb-2
