@@ -36,34 +36,35 @@ const theme = computed(() => {
 </script>
 
 <template lang="pug">
-  button(
-    type="button"
-    @click="$emit('click')"
+  div(class="w-full"
     :class="{\
       'scale-60' : size === 'sm',\
       'scale-80' : size === 'md',\
       'scale-110' : size === 'lg',\
       'scale-120' : size === 'xl'\
-    }"
-    class="group relative inline-block cursor-pointer select-none transition-all duration-75 active:scale-x-[95%] active:scale-y-[90%] active:brightness-110 touch-manipulation"
-  )
-    //- The "Bottom Shadow" / 3D Depth
-    span(
-      :style="{ backgroundColor: theme.shadow }"
-      class="absolute inset-0 translate-y-[4px] md:translate-y-[4px] rounded-2xl"
+  }")
+    button(
+      type="button"
+      @click="$emit('click')"
+      class="group relative w-full inline-block cursor-pointer select-none transition-all duration-75 active:scale-x-[95%] active:scale-y-[90%] hover:scale-[103%] active:brightness-110 touch-manipulation"
     )
+      //- The "Bottom Shadow" / 3D Depth
+      span(
+        :style="{ backgroundColor: theme.shadow }"
+        class="absolute inset-0 translate-y-[4px] md:translate-y-[4px] rounded-2xl"
+      )
 
-    //- The Main Button Body
-    span(
-      :style="{ backgroundImage: `linear-gradient(to bottom, ${theme.from}, ${theme.to})` }"
-      class="relative block min-w-[80px] md:min-w-[140px] rounded-xl md:rounded-2xl border-[2px] border-[#0f1a30] px-4 md:px-6 py-2 md:py-3"
-    )
-      //- Inner Top Shine (The classic game shine)
-      span(class="absolute inset-x-0 top-0 h-1/2 rounded-t-xl bg-white/25")
+      //- The Main Button Body
+      span(
+        :style="{ backgroundImage: `linear-gradient(to bottom, ${theme.from}, ${theme.to})` }"
+        class="relative block min-w-[80px] md:min-w-[140px] rounded-xl md:rounded-2xl border-[2px] border-[#0f1a30] px-4 md:px-6 py-2 md:py-3"
+      )
+        //- Inner Top Shine (The classic game shine)
+        span(class="absolute inset-x-0 top-0 h-1/2 rounded-t-xl bg-white/25")
 
-      //- Button Text / Content
-      span(class="text relative block text-sm md:text-xl tracking-wide text-white")
-        slot {{ label }}
+        //- Button Text / Content
+        span(class="text relative block text-sm md:text-xl tracking-wide text-white")
+          slot {{ label }}
 </template>
 
 <style scoped lang="sass">

@@ -9,7 +9,7 @@
   )
     div.absolute.inset-0.z-50.flex.items-center.justify-center.pointer-events-none
       div.relative.border-4.rounded-2xl.w-full.max-w-xs.shadow-2xl.overflow-hidden.pointer-events-auto(
-        class="border-slate-600/80 bg-slate-900/95"
+        class="border-slate-600/80 bg-black/80"
       )
         //- Close Button
         FCloseButton.absolute.w-8.h-8.flex(
