@@ -66,11 +66,9 @@ const applyPlusRule = (ctx: RuleContext): { x: number, y: number }[] => {
 
   const captures: { x: number, y: number }[] = []
   sums.forEach((targets) => {
-    // Plus applies if at least 2 sides have the same sum
     if (targets.length >= 2) {
       targets.forEach(t => {
         const card = ctx.board[t.y][t.x].card
-        // Only capture if it belongs to the opponent
         if (card && card.owner !== ctx.attacker.owner) {
           captures.push(t)
         }
@@ -81,9 +79,47 @@ const applyPlusRule = (ctx: RuleContext): { x: number, y: number }[] => {
   return captures
 }
 
-const applySameRule = (): { x: number, y: number }[] => {
-  return []
+/**
+ * Same Rule: If Attacker value === Defender value for at least 2 sides.
+ */
+const applySameRule = (ctx: RuleContext): { x: number, y: number }[] => {
+  const matches: { x: number, y: number }[] = []
+  const adjacents = [
+    { dy: -1, dx: 0, atk: 'top', def: 'bottom' },
+    { dy: 1, dx: 0, atk: 'bottom', def: 'top' },
+    { dy: 0, dx: 1, atk: 'right', def: 'left' },
+    { dy: 0, dx: -1, atk: 'left', def: 'right' }
+  ] as const
+
+  adjacents.forEach(({ dy, dx, atk, def }) => {
+    const ny = ctx.y + dy
+    const nx = ctx.x + dx
+
+    if (ny >= 0 && ny < 3 && nx >= 0 && nx < 3) {
+      const defender = ctx.board[ny][nx].card
+      if (defender) {
+        // Check for exact value equality
+        if (ctx.attacker.values[atk] === defender.values[def]) {
+          matches.push({ x: nx, y: ny })
+        }
+      }
+    }
+  })
+
+  const captures: { x: number, y: number }[] = []
+  // Rule only triggers if at least 2 sides match
+  if (matches.length >= 2) {
+    matches.forEach(m => {
+      const card = ctx.board[m.y][m.x].card
+      if (card && card.owner !== ctx.attacker.owner) {
+        captures.push(m)
+      }
+    })
+  }
+
+  return captures
 }
+
 const applyComboRule = (): { x: number, y: number }[] => {
   return []
 }
@@ -104,12 +140,9 @@ export const useBattleRules = () => {
       if (ruleFn) {
         const results = ruleFn(ctx)
         results.forEach(pos => totalCaptures.add(`${pos.x},${pos.y}`))
-      } else {
-        console.warn(`Unknown rule: ${ruleName}`)
       }
     })
 
-    // Convert Set back to coordinate objects and flip cards
     totalCaptures.forEach(coord => {
       const [cx, cy] = coord.split(',').map(Number)
       const targetCard = ctx.board[cy][cx].card
@@ -119,7 +152,5 @@ export const useBattleRules = () => {
     })
   }
 
-  return {
-    evaluateMatchRules
-  }
+  return { evaluateMatchRules }
 }

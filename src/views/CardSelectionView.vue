@@ -76,7 +76,7 @@
           FButton.text-xs.btn-battle(
             class="sm:text-sm"
             :disabled="selectedDeck.length < 5"
-            :class="{ 'is-ready': selectedDeck.length === 5, 'opacity-50 grayscale': selectedDeck.length < 5 }"
+            :class="{ 'attention-bounce': selectedDeck.length === 5, 'opacity-50 grayscale': selectedDeck.length < 5 }"
             @click="onNext"
           ) {{ t(isCampaignMatch ? 'ready' : 'battle') }} ({{ selectedDeck.length }}/5)
 </template>

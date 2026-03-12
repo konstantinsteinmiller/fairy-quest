@@ -2,7 +2,6 @@
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
   )
-    //- Rules Announcement (Shows only if non-standard rules exist)
     MatchRulesModal(
       :is-open="showRules && nonStandardRules.length > 0"
       :rules="nonStandardRules"
@@ -97,14 +96,12 @@ const {
 
 useNPC(turn, npcHand, board, placeCard, userDifficulty, activeRules)
 
-const showRules = ref(false)
+const showRules = ref(true)
 const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
 
 onMounted(() => {
+  showRules.value = true
   resetGame()
-  if (nonStandardRules.value.length > 0) {
-    showRules.value = true
-  }
 })
 
 const isGameOver = ref<boolean>(false)

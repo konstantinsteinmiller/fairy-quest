@@ -21,12 +21,14 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] drag and drop for a card
     - [x] tap to select a card and place
   - [ ] move placeholder showing what effect the placed card would have with eventual +1 or -1 calculation
+  - [ ] placeholder shows element effects.
 - [ ] Trading Rules + Battle rules
     - [x] plus rule
-    - [ ] same rule
+  - [x] same rule
     - [ ] combo rule
     - [ ] wall rule
     - [ ] low card rule
+  - [ ] elements rule
 - [ ] Npc logic
     - [x] random choice
     - [x] smart choice
@@ -35,9 +37,9 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] load card images
     - [x] elements in model
     - [x] balanced card values
-        - [x] add frames to Cards
-            - [x] selected card frame
-            - [x] not-selected card frame
+  - [x] add frames to Cards
+    - [x] selected card frame
+    - [x] not-selected card frame
 - [x] GameOverModal
     - [x] show winner / loser / draw
     - [x] restart game button

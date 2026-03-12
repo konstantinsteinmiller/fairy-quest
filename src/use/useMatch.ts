@@ -110,6 +110,45 @@ export const useMatch = () => {
     turn.value = 'player'
   }
 
+  const debugSameHand = () => {
+    const { playerCard, npcCards } = createPlusTestScenario()
+    // Fill hand with 5 copies of the test card
+    playerHand.value = Array.from({ length: 5 }, (_, i) => ({
+      ...{
+        id: 'eclipse',
+        // @ts-ignore
+        instanceId: 'player-1' + i,
+        name: 'Starlight Same',
+        owner: 'player',
+        values: { top: 1, right: 2, bottom: 3, left: 3 },
+        image: modelImgPath('eclipse')
+      },
+      instanceId: `test-p-${i}`
+    }))
+
+    npcHand.value = [{
+      id: 'asha',
+      // @ts-ignore
+      instanceId: 'player-21',
+      name: 'asha Plus',
+      owner: 'npc',
+      values: { top: 3, right: 3, bottom: 1, left: 2 },
+      image: modelImgPath('asha')
+    },
+      {
+        id: 'asha',
+        // @ts-ignore
+        instanceId: 'player-22',
+        name: 'asha Plus',
+        owner: 'npc',
+        values: { top: 3, right: 3, bottom: 1, left: 2 },
+        image: modelImgPath('asha')
+      }]
+
+    activeRules.value = ['standard', 'same']
+    turn.value = 'player'
+  }
+
   return {
     turn,
     playerHand,
@@ -120,8 +159,7 @@ export const useMatch = () => {
     isBoardFull,
     isSplashScreenVisible,
     isDbInitialized,
-    activeRules,
-    debugPlusHand
+    activeRules
   }
 }
 

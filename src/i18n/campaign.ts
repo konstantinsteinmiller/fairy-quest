@@ -5,6 +5,7 @@ export default {
     'node3': 'The Dark Knight',
     ['forest-1-desc']: 'The woods are thick with ancient magic.',
     ['mountain-1-desc']: 'A rocky path leads to a heavy opponent.',
+    ['mountain-2-desc']: 'A rocky path leads to a super heavy opponent.',
     ['castle-boss-desc']: 'The final challenge awaits inside the keep.'
   },
   de: {
@@ -13,6 +14,7 @@ export default {
     'node3': 'Der Dunkle Ritter',
     ['forest-1-desc']: 'Die Wälder sind voller uralter Magie.',
     ['mountain-1-desc']: 'Ein felsiger Pfad führt zu einem schweren Gegner.',
+    ['mountain-2-desc']: 'Ein felsiger Pfad führt zu einem sehr schweren Gegner.',
     ['castle-boss-desc']: 'Die letzte Herausforderung erwartet dich im Inneren der Burg.'
   }
 }
