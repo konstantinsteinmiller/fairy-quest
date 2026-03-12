@@ -1,0 +1,62 @@
+<template lang="pug">
+  FModal(
+    v-if="!userSkipRulesModal"
+    :model-value="isOpen"
+    :title="t('matchRules')"
+    :is-closable="true"
+    @update:model-value="emit('close')"
+  )
+    div.p-2.flex.flex-col.items-center.gap-3(class="sm:gap-4")
+      div.flex.flex-col.items-center.gap-4(v-for="rule in rules" :key="rule")
+        div.relative
+          div.absolute.inset-0.bg-amber-400.blur-xl.opacity-20.animate-pulse
+          RuleIcon.attention-5(:rule="rule")
+
+      //- Divider
+      div(class="w-full h-1 bg-[#0f1a30] rounded-full opacity-20")
+
+      //- Skip Rules Switch
+      FSwitch(
+        :model-value="userSkipRulesModal"
+        @update:model-value="setSettingValue('skipRulesModal', $event)"
+      )
+        div(class="text-[10px]") {{ t('doNotBother') }}
+
+    template(#footer)
+      FButton.w-full.max-w-xs(
+        @click="emit('close')"
+      ) {{ t('close') }}
+</template>
+
+<script setup lang="ts">
+import type { BattleRuleName } from '@/use/useBattleRules'
+import FModal from '@/components/atoms/FModal.vue'
+import FButton from '@/components/atoms/FButton'
+import FSwitch from '@/components/atoms/FSwitch.vue'
+import RuleIcon from '@/components/atoms/RuleIcon'
+import { useI18n } from 'vue-i18n'
+import useUser from '@/use/useUser'
+
+defineProps<{
+  isOpen: boolean
+  rules: BattleRuleName[]
+}>()
+
+const emit = defineEmits(['close'])
+const { t } = useI18n()
+const { userSkipRulesModal, setSettingValue } = useUser()
+</script>
+
+<style lang="sass" scoped>
+.brawl-text
+  text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000
+</style>
+
+<i18n>
+en:
+  matchRules: "Match Rules"
+  doNotBother: "Don't show again"
+de:
+  matchRules: "Kampfregeln"
+  doNotBother: "Nicht mehr anzeigen"
+</i18n>

@@ -1,4 +1,4 @@
-const gamePrefix = 'fairyQuest'
+const gamePrefix = 'cardQuest'
 export const GAME_USER_LANGUAGE: string = gamePrefix + 'UserLanguage'
 export const GAME_USER_SOUND_VOLUME: string = gamePrefix + 'SoundVolume'
 export const GAME_USER_MUSIC_VOLUME: string = gamePrefix + 'MusicVolume'

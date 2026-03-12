@@ -1,6 +1,6 @@
 import type { GameCard, BoardSlot } from '@/types/game'
 
-export type BattleRuleName = 'standard' | 'plus' | 'same'
+export type BattleRuleName = 'standard' | 'plus' | 'same' | 'combo'
 
 export interface RuleContext {
   x: number
@@ -81,10 +81,19 @@ const applyPlusRule = (ctx: RuleContext): { x: number, y: number }[] => {
   return captures
 }
 
+const applySameRule = (): { x: number, y: number }[] => {
+  return []
+}
+const applyComboRule = (): { x: number, y: number }[] => {
+  return []
+}
+
 export const useBattleRules = () => {
   const rulesMap: Record<BattleRuleName, (ctx: RuleContext) => { x: number, y: number }[]> = {
     standard: applyStandardRule,
-    plus: applyPlusRule
+    plus: applyPlusRule,
+    same: applySameRule,
+    combo: applyComboRule
   }
 
   const evaluateMatchRules = (activeRules: BattleRuleName[], ctx: RuleContext) => {

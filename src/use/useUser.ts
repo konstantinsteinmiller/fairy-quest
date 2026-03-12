@@ -15,6 +15,7 @@ const allowTutorial: Ref<boolean> = ref(true)
 const isOptionsModalOpen: Ref<boolean> = ref(false)
 const userHand: Ref<any> = ref('[]')
 const userCampaign: Ref<any> = ref('[]')
+const userSkipRulesModal: Ref<boolean> = ref(false)
 
 /* just for after the indexDB has loaded */
 watch(
@@ -34,7 +35,8 @@ const { storeUser } = useUserDb({
   userLanguage,
   userTutorialsDoneMap,
   userHand,
-  userCampaign
+  userCampaign,
+  userSkipRulesModal
 })
 
 const useUser = () => {
@@ -52,6 +54,10 @@ const useUser = () => {
       case 'difficulty':
         userDifficulty.value = value
         break
+      case 'skipRulesModal':
+        console.log('userSkipRulesModal: ', userSkipRulesModal.value, value)
+        userSkipRulesModal.value = value
+        break
       case 'tutorialsDoneMap':
         userTutorialsDoneMap.value = JSON.stringify(value)
         break
@@ -68,6 +74,7 @@ const useUser = () => {
       userSoundVolume: +userSoundVolume.value,
       userMusicVolume: +userMusicVolume.value,
       userLanguage: userLanguage.value,
+      userSkipRulesModal: userSkipRulesModal.value,
       userTutorialsDoneMap: userTutorialsDoneMap.value,
       userHand: userHand.value,
       userCampaign: userCampaign.value
@@ -82,6 +89,7 @@ const useUser = () => {
     userTutorialsDoneMap,
     userHand,
     userCampaign,
+    userSkipRulesModal,
     tutorialPhase,
     allowTutorial,
     setSettingValue,

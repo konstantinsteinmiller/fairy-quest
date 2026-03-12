@@ -11,6 +11,7 @@ const useUserDb = ({
                      userSoundVolume,
                      userMusicVolume,
                      userLanguage,
+                     userSkipRulesModal,
                      userTutorialsDoneMap,
                      userHand,
                      userCampaign
@@ -19,6 +20,7 @@ const useUserDb = ({
   userSoundVolume: Ref<number>
   userMusicVolume: Ref<number>
   userLanguage: Ref<string>
+  userSkipRulesModal: Ref<boolean>
   userTutorialsDoneMap: Ref<string>
   userHand: Ref<string>
   userCampaign: Ref<string>
@@ -50,6 +52,7 @@ const useUserDb = ({
     objectStore.createIndex('userSoundVolume', 'userSoundVolume', { unique: false })
     objectStore.createIndex('userMusicVolume', 'userMusicVolume', { unique: false })
     objectStore.createIndex('userLanguage', 'userLanguage', { unique: false })
+    objectStore.createIndex('userSkipRulesModal', 'userSkipRulesModal', { unique: false })
     objectStore.createIndex('userTutorialsDoneMap', 'userTutorialsDoneMap', { unique: false })
     objectStore.createIndex('userHand', 'userHand', { unique: false })
     objectStore.createIndex('userCampaign', 'userCampaign', { unique: false })
@@ -68,6 +71,10 @@ const useUserDb = ({
         userSoundVolume.value = request.result.userSoundVolume
         userMusicVolume.value = request.result.userMusicVolume
         userLanguage.value = request.result.userLanguage
+
+        if (request.result.userSkipRulesModal) {
+          userSkipRulesModal.value = JSON.parse(request.result.userSkipRulesModal)
+        }
         if (request.result.userTutorialsDoneMap) {
           userTutorialsDoneMap.value = JSON.parse(request.result.userTutorialsDoneMap)
         }
@@ -83,6 +90,7 @@ const useUserDb = ({
           userSoundVolume: userSoundVolume.value,
           userMusicVolume: userMusicVolume.value,
           userLanguage: userLanguage.value,
+          userSkipRulesModal: userSkipRulesModal.value,
           userTutorialsDoneMap: userTutorialsDoneMap.value,
           userHand: userHand.value,
           userCampaign: userCampaign.value
@@ -102,6 +110,10 @@ const useUserDb = ({
   // Define the storeUser() function
   function storeUser(params: any) {
     const store = db.transaction(['user_os'], 'readwrite').objectStore('user_os')
+
+    if (Object.keys(params.userSkipRulesModal)?.length) {
+      params.userSkipRulesModal = JSON.stringify(userSkipRulesModal)
+    }
 
     if (Object.keys(params.userHand)?.length) {
       const clone = clonedeep(params.userHand)

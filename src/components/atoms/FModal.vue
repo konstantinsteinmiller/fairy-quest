@@ -9,15 +9,22 @@ const props = withDefaults(defineProps<Props>(), {
   isClosable: true
 })
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
 const close = () => {
-  emit('update:modelValue', false);
-};
+  emit('update:modelValue', false)
+}
 </script>
 
 <template lang="pug">
-  Transition(name="pop")
+  Transition(
+    name="pop"
+    appear
+    enter-active-class="transition-all duration-[400ms] ease-[cubic-bezier(0.18,0.89,0.32,1.28)]"
+    leave-active-class="transition-all duration-[200ms] ease-[cubic-bezier(0.6,-0.28,0.735,0.045)]"
+    enter-from-class="opacity-0 scale-50 translate-y-12"
+    leave-to-class="opacity-0 scale-50 translate-y-12"
+  )
     div(v-if="modelValue" class="fixed inset-0 z-50 flex items-center justify-center p-4")
       //- Backdrop
       div(class="absolute inset-0 bg-black/70 backdrop-blur-sm" @click="close")
@@ -41,13 +48,13 @@ const close = () => {
           div(class="absolute inset-0 translate-y-2 rounded-[1.5rem] sm:rounded-[2.5rem] bg-[#0c1626]")
 
           //- The Modal Body
-          div(class="relative bg-[#1a2b4b] border-[5px] border-[#0f1a30] rounded-[1.5rem] sm:rounded-[2.5rem] pt-7 pb-4 px-2 sm:px-4 sm:pt-6 sm:pb-4 md:p-8 md:pb-6 md:pt-10")
+          div(class="relative bg-[#1a2b4b] border-[5px] border-[#0f1a30] rounded-[1.25rem] sm:rounded-[2rem] pt-7 pb-4 px-2 sm:px-4 sm:pt-6 sm:pb-4 md:p-8 md:pb-6 md:pt-10")
 
             //- Close Button (X)
             button(
               v-if="isClosable"
               @click="close"
-              class="absolute top-0 right-0 group cursor-pointer transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-4 sm:right-4 "
+              class="hover:scale-[103%] absolute top-0 right-0 group cursor-pointer transition-transform active:scale-40 sm:active:scale-90 scale-60 sm:scale-100 sm:top-3 sm:right-3"
             )
               div(class="relative")
                 div(class="absolute inset-0 translate-y-1 rounded-lg bg-[#6b1212]")

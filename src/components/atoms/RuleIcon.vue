@@ -4,7 +4,7 @@ import { ruleModal } from '@/use/useMatch'
 
 defineProps<{
   rule: BattleRuleName
-  iconOnly: boolean
+  iconOnly?: boolean
 }>()
 </script>
 

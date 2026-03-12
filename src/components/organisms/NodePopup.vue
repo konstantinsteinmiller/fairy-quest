@@ -13,7 +13,7 @@
       )
         //- Close Button
         FCloseButton.absolute.w-8.h-8.flex(
-          class="!top-2 !right-2 z-10"
+          class="!top-2 !right-2 z-10 hover:scale-[103%]"
           @close="emit('close')"
         )
 
@@ -44,6 +44,7 @@
         //- Action
         div.p-4.pt-0
           FButton.w-full(
+            :attention="true"
             @click="emit('start', )"
           ) {{ t('battle') }}
 </template>

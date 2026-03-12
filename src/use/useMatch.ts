@@ -3,6 +3,7 @@ import type { GameCard, BoardSlot } from '@/types/game'
 import { useModels, modelImgPath } from '@/use/useModels'
 import { useBattleRules, type BattleRuleName } from '@/use/useBattleRules'
 import { useRouter } from 'vue-router'
+import { createPlusTestScenario } from '@/../tests/fixtures/plusRuleHand'
 
 const isSplashScreenVisible = ref<boolean>(false)
 const isDbInitialized = ref<boolean>(false)
@@ -89,6 +90,26 @@ export const useMatch = () => {
     return true
   }
 
+  const debugPlusHand = () => {
+    const { playerCard, npcCards } = createPlusTestScenario()
+    // Fill hand with 5 copies of the test card
+    playerHand.value = Array.from({ length: 5 }, (_, i) => ({
+      ...{
+        id: 'starlight',
+        // @ts-ignore
+        instanceId: 'player-1',
+        name: 'Starlight Plus',
+        owner: 'player',
+        values: { top: 2, right: 2, bottom: 2, left: 2 }, // top 6, left 4
+        image: modelImgPath('starlight')
+      },
+      instanceId: `test-p-${i}`
+    }))
+    npcHand.value = npcCards
+    activeRules.value = ['standard', 'plus']
+    turn.value = 'player'
+  }
+
   return {
     turn,
     playerHand,
@@ -99,7 +120,8 @@ export const useMatch = () => {
     isBoardFull,
     isSplashScreenVisible,
     isDbInitialized,
-    activeRules // Exposed so the UI or Campaign can adjust them
+    activeRules,
+    debugPlusHand
   }
 }
 

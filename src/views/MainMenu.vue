@@ -24,9 +24,9 @@
         FButton(@click="onCampaign") {{ t('campaign') }}
         FButton(type="secondary" @click="showOptions = true") {{ t('settings') }}
 
-    FModal(v-if="false" v-model="showOptions" title="New Fairy!")
+    FModal(v-if="false" v-model="showOptions" title="New Card!")
       div(class="flex flex-col items-center")
-        //img(src="/path/to/fairy.png" class="w-40 h-40 object-contain mb-4")
+        //img(src="/path/to/card.png" class="w-40 h-40 object-contain mb-4")
         p(class="text-lg opacity-90") You've unlocked a rare model!
 
       template(#footer)

@@ -1,0 +1,14 @@
+.attention-bounce
+  animation: attention-bounce 1.4s infinite ease-in-out
+
+.attention-5
+  animation: attention-bounce 1.4s 5 ease-in-out forwards
+
+@keyframes attention-bounce
+  0%, 20%, 50%, 80%, 100%
+    transform: translateY(0) scale(1)
+  40%
+    transform: translateY(-8px) scale(1.05)
+  60%
+    transform: translateY(-4px) scale(1.02)
+

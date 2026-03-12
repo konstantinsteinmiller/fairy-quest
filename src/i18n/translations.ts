@@ -1,6 +1,6 @@
 export default {
   en: {
-    gameName: 'Fairy Quest',
+    gameName: 'Card Quest',
     cancel: 'Cancel',
     close: 'Close',
     understood: 'Understood',
@@ -14,7 +14,6 @@ export default {
     options: 'Options',
     continue: 'Continue',
     exit: 'Exit Game',
-    close: 'Close',
     elements: {
       nature: 'Nature',
       water: 'Water',
@@ -58,7 +57,6 @@ export default {
     options: 'Einstellungen',
     continue: 'Weiter',
     exit: 'Spiel Beenden',
-    close: 'Schließen',
     elements: {
       nature: 'Natur',
       water: 'Wasser',

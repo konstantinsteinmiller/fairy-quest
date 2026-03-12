@@ -2,6 +2,13 @@
   div.h-screen.w-screen.bg-slate-900.text-white.overflow-hidden.flex.flex-col.items-center.justify-between.p-1.touch-none(
     class="inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] bg-repeat select-none landscape:p-0.5 md:p-4"
   )
+    //- Rules Announcement (Shows only if non-standard rules exist)
+    MatchRulesModal(
+      :is-open="showRules && nonStandardRules.length > 0"
+      :rules="nonStandardRules"
+      @close="showRules = false"
+    )
+
     GameOverModal(
       :is-open="isGameOver"
       :scores="scores"
@@ -74,9 +81,10 @@ import EnemyHandCard from '@/components/EnemyHandCard'
 import CardDisplay from '@/components/CardDisplay'
 import ScoreBoard from '@/components/ScoreBoard'
 import GameOverModal from '@/components/organisms/GameOverModal'
+import MatchRulesModal from '@/components/organisms/MatchRulesModal'
 import useUser from '@/use/useUser'
 
-const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull } = useMatch()
+const { turn, playerHand, npcHand, board, resetGame, placeCard, isBoardFull, activeRules } = useMatch()
 const { userDifficulty } = useUser()
 const {
   selectedCardId,
@@ -89,8 +97,14 @@ const {
 
 useNPC(turn, npcHand, board, placeCard, userDifficulty)
 
+const showRules = ref(false)
+const nonStandardRules = computed(() => activeRules.value.filter(r => r !== 'standard'))
+
 onMounted(() => {
   resetGame()
+  if (nonStandardRules.value.length > 0) {
+    showRules.value = true
+  }
 })
 
 const isGameOver = ref<boolean>(false)

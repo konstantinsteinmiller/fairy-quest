@@ -2,17 +2,19 @@
 import { computed } from 'vue'
 
 interface Props {
-  label?: string;
-  type?: 'primary' | 'secondary';
-  colorFrom?: string;
-  colorTo?: string;
-  shadowColor?: string;
-  size?: 'sm|md|lg|xl';
+  label?: string
+  type?: 'primary' | 'secondary'
+  colorFrom?: string
+  colorTo?: string
+  shadowColor?: string
+  size?: 'sm' | 'md' | 'lg' | 'xl'
+  attention?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: 'NO LABEL DEFINED!',
-  type: 'primary'
+  type: 'primary',
+  attention: false
 })
 
 defineEmits(['click'])
@@ -36,13 +38,16 @@ const theme = computed(() => {
 </script>
 
 <template lang="pug">
-  div(class="w-full"
+  div(
+    class="w-full"
     :class="{\
-      'scale-60' : size === 'sm',\
-      'scale-80' : size === 'md',\
-      'scale-110' : size === 'lg',\
-      'scale-120' : size === 'xl'\
-  }")
+    'scale-60' : size === 'sm',\
+    'scale-80' : size === 'md',\
+    'scale-110' : size === 'lg',\
+    'scale-120' : size === 'xl',\
+    'attention-bounce': attention\
+  }"
+  )
     button(
       type="button"
       @click="$emit('click')"
@@ -63,7 +68,7 @@ const theme = computed(() => {
         span(class="absolute inset-x-0 top-0 h-1/2 rounded-t-xl bg-white/25")
 
         //- Button Text / Content
-        span(class="text relative block text-sm md:text-xl tracking-wide text-white")
+        span(class="text relative block text-sm md:text-xl tracking-wide text-white uppercase font-black")
           slot {{ label }}
 </template>
 
