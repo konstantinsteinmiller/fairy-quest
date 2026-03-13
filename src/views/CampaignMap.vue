@@ -78,7 +78,7 @@
         type="secondary"
         size="md"
         @click="router.push({ name: 'deck' })"
-      ) ◀ {{ t('back') }}
+      ) {{ t('back') }}
 </template>
 
 <script setup lang="ts">

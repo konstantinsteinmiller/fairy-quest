@@ -1,28 +1,31 @@
 <template lang="pug">
-  div.h-screen.w-screen.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
-    class="h-[100dvh] landscape:sm:p-1 sm:p-4 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')] h-full min-h-0"
+  div.flex.flex-col.items-center.p-1.overflow-hidden.bg-repeat.select-none(
+    class="h-[100dvh] portrait:p-2 landscape:p-1 landscape:md:p-4 inset-0 bg-[url('/images/board/papyrus-tile_128x128.webp')]"
     style="padding-bottom: env(safe-area-inset-bottom); padding-top: env(safe-area-inset-top);"
   )
     //- Animation Overlay
     div.flying-card(v-if="flyingCard" :style="flyingStyle")
       CardDisplay(:card="flyingCard.card" :show-tint="false")
 
-    //- Main Layout
-    div.flex-1.w-full.p-1.h-full.max-w-6xl.flex.flex-col.gap-2(class="landscape:flex-row")
-
-      //- THE BOOK
-      div.relative.shadow-inner.flex.flex-col.flex-grow.mr-2(class="overflow-hidden")
+    //- Main Layout: flex-col for mobile portrait, flex-row for landscape
+    div.flex.w-full.max-w-6xl.min-h-0(
+      class="flex-col landscape:flex-row gap-1 sm:gap-4 h-full"
+    )
+      //- THE BOOK (Flex grow but must be able to shrink to avoid pushing buttons out)
+      div.relative.shadow-inner.flex.flex-col.flex-grow.min-h-0(class="overflow-hidden")
         img.absolute.inset-0.w-full.h-full.object-fill(src="/images/bg/book_512x401.webp")
 
-        div.flex-1.relative.z-10.ml-1.px-5.pt-14.flex.flex-wrap.justify-center.content-start.overflow-y-auto.cursor-pointer(
-          class="gap-x-10 gap-3 sm:gap-3 sm:gap-x-2 md:gap-4 md:px-12 md:pt-15"
+        //- Inner scrollable area for cards
+        div.flex-1.relative.z-10.ml-1.px-5.pt-12.flex.flex-wrap.justify-center.content-start.overflow-y-auto(
+          class="gap-x-4 gap-y-4 sm:gap-x-10 sm:pt-12 md:px-12 md:pt-16 pb-12"
+          :class="{ 'gap-y-6': isMobileLandscape, 'sm:pt-14': !isMobileLandscape && windowHeight > 600 && windowWidth > 700 }"
         )
           div.relative.group(
             v-for="card in paginatedCollection"
             :key="card.id"
             :ref="el => cardRefs[card.id] = el"
             @click="addToDeck(card, $event)"
-            class="card-container flex items-center justify-center"
+            class="card-container flex items-center justify-center cursor-pointer"
             :class="{ 'out-of-stock': card.count === 0 }"
           )
             div.w-full.h-full.transition-transform.duration-200(class="group-hover:scale-105 active:scale-95")
@@ -34,8 +37,11 @@
             )
               span {{ card.count }}
 
-        //- Bottom Controls
-        div(class="bottom-7 landscape:bottom-8 sm:bottom-9").absolute.left-0.flex.justify-center.items-center.gap-6.py-2.z-30.relative
+        //- Pagination Controls (Absolute positioned within the book container)
+        div(
+          class="bottom-8 landscape:bottom-3"
+          :class="{ '!bottom-11': !isMobileLandscape && windowWidth > 800  }"
+        ).absolute.left-0.right-0.flex.justify-center.items-center.gap-6.z-30
           button.p-1.cursor-pointer(
             class="text-orange-900 hover:scale-125 transition-transform disabled:opacity-20"
             @click="prevPage"
@@ -51,17 +57,17 @@
           )
             span.text-xl(class="sm:text-2xl") ▶
 
-      //- Sidebar / Deck Dock
-      div.flex.flex-col.gap-1.justify-center.items-center.sidebar-container(
-        class="sm:gap-2 landscape:w-32 landscape:sm:w-40 landscape:md:w-48 portrait:h-28 portrait:w-full"
+      //- Sidebar / Deck Dock (Shrink-0 prevents this being squeezed on small screens)
+      div.flex.flex-col.gap-0.shrink-0.items-center.justify-between(
+        class="portrait:w-full portrait:h-auto portrait:pb-2 landscape:w-32 landscape:sm:w-40 landscape:md:w-48"
       )
-        div.flex.flex-col.items-center.w-full.h-full.deck-target(
-          class="portrait:justify-center"
+        //- Deck Area
+        div.flex.flex-col.items-center.w-full.deck-target(
+          class="portrait:justify-center min-h-[80px]"
         )
-          div.flex.flex-1.w-full.justify-center.relative.z-40.hand-interact-zone(
+          div.flex.w-full.justify-center.relative.z-40.hand-interact-zone(
             class="landscape:flex-col landscape:items-center landscape:justify-start"
           )
-            //- Added more event listeners to catch whatever the component emits
             PlayerHandCard(
               :cards="selectedDeck"
               :is-active="true"
@@ -71,14 +77,23 @@
               @remove="removeFromDeck"
             )
 
-        div.flex.gap-2.mb-4.justify-center(class="landscape:flex-col landscape:sm:flex-col")
-          FButton.text-xs(type="secondary" class="sm:text-sm" @click="router.push({ name: 'main-menu'})") ◀ {{ t('back') }}
-          FButton.text-xs.btn-battle(
+        //- Action Buttons (Always at bottom in portrait)
+        div.flex.gap-1.w-full.px-2(class="portrait:flex-row landscape:flex-col landscape:mb-4")
+          FButton.text-xs.flex-1(
+            type="secondary"
+            :size="'md'"
+            class="sm:text-sm"
+            @click="router.push({ name: 'main-menu'})"
+          ) {{ t('back') }}
+          FButton.text-xs.flex-1.btn-battle(
+            :size="'md'"
             class="sm:text-sm"
             :disabled="selectedDeck.length < 5"
-            :class="{ 'attention-bounce': selectedDeck.length === 5, 'opacity-50 grayscale': selectedDeck.length < 5 }"
+            :attention="selectedDeck.length === 5"
+            :class="{ 'opacity-50 grayscale': selectedDeck.length < 5 }"
             @click="onNext"
-          ) {{ t(isCampaignMatch ? 'ready' : 'battle') }} ({{ selectedDeck.length }}/5)
+          )
+            span.whitespace-nowrap {{ t(isCampaignMatch ? 'ready' : 'battle') }} ({{ selectedDeck.length }}/5)
 </template>
 
 <script setup lang="ts">
@@ -92,6 +107,7 @@ import PlayerHandCard from '@/components/PlayerHandCard'
 import { playerSelection, isCampaignMatch } from '@/use/useMatch'
 import { modelImgPath, useModels } from '@/use/useModels'
 import useUser from '@/use/useUser'
+import { mobileCheck } from '@/utils/function'
 
 const { setSettingValue, userHand } = useUser()
 const { t } = useI18n()
@@ -131,7 +147,23 @@ onMounted(() => {
 
 onUnmounted(() => window.removeEventListener('resize', updateDimensions))
 
+const isMobileLandscape = ref(false)
+const isStackedSize = ref('50px')
+const isStackedMargin = ref('-22px')
+
 const itemsPerPage = computed(() => {
+  if (mobileCheck() && windowWidth.value > 500) {
+    isMobileLandscape.value = true
+    isStackedSize.value = '50px'
+    isStackedMargin.value = '-22px'
+  } else {
+    isMobileLandscape.value = false
+    isStackedSize.value = '70px'
+    isStackedMargin.value = '0px'
+  }
+  if (windowHeight.value < 650 && windowWidth.value <= 500) return 6
+  if ((windowHeight.value > 600 && windowWidth.value > 980)
+    || (isMobileLandscape.value && windowWidth.value > 600/* && windowHeight.value > 330*/)) return 12
   if (windowHeight.value > 600 && windowWidth.value > 600) return 16
   return windowWidth.value < 801 ? 8 : 16
 })
@@ -182,9 +214,6 @@ const addToDeck = (cardTemplate: any, event: MouseEvent) => {
 }
 
 const removeFromDeck = (payload: any) => {
-  // Debug: console.log('Payload from component:', payload)
-
-  // Robust identification
   let idToFind = ''
   if (typeof payload === 'string') idToFind = payload
   else if (payload?.instanceId) idToFind = payload.instanceId
@@ -239,17 +268,16 @@ const onNext = () => {
   pointer-events: none
 
 .card-container
-  width: calc(32% - 4px)
+  width: calc(35% - 8px)
   aspect-ratio: 1 / 1
+  @media (min-width: 450px)
+    width: calc(28% - 8px)
   @media (max-width: 800px) and (orientation: landscape)
-    width: calc(21% - 8px)
+    width: calc(15% - 8px)
   @media (min-width: 801px)
     width: calc(20% - 12px)
-
-.sidebar-container
-  flex-shrink: 0
-  flex-grow: 0
-
+  @media (min-width: 980px)
+    width: calc(18% - 12px)
 
 .hand-interact-zone
   pointer-events: auto !important
@@ -258,8 +286,8 @@ const onNext = () => {
     pointer-events: auto !important
 
 :deep(.card-wrapper)
-  width: 60px !important
-  height: 60px !important
+  width: 52px !important
+  height: 52px !important
   transition: transform 0.2s ease
   cursor: pointer !important
   pointer-events: auto !important
@@ -269,11 +297,12 @@ const onNext = () => {
     transform: scale(1.1)
 
   @media (max-width: 800px) and (orientation: landscape)
-    width: 50px !important
-    height: 50px !important
-    margin-top: -22px
+    width: v-bind(isStackedSize) !important
+    height: v-bind(isStackedSize) !important
+    margin-top: v-bind(isStackedMargin)
     &:first-child
       margin-top: 0
+
   @media (min-width: 801px)
     width: 90px !important
     height: 90px !important

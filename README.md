@@ -26,7 +26,6 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] plus rule
   - [x] same rule
     - [ ] combo rule
-    - [ ] wall rule
     - [ ] low card rule
   - [ ] elements rule
 - [ ] Npc logic
@@ -71,6 +70,7 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [x] double selection if card is multiple times in player hand
 - [x] mobile layout changes on landscape
+- [ ] tap outside Popup doesnt work
 
 ## Nice-to-have
 
