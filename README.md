@@ -67,6 +67,10 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
     - [x] Name
     - [ ] element
 
+## Refactorings
+
+- [ ] replace remaining Modals with FModal
+
 ## Bugs
 
 - [x] double selection if card is multiple times in player hand
@@ -77,7 +81,8 @@ WIP: [playable demo](https://konstantinsteinmiller.github.io/card-quest/)
 
 - [ ] Cards can also attack diagonally
 - [ ] Card Designer from Fairy Dust
-- [ ] 
+- [ ] 100 card designs
+- [ ] more campaign tracks
 
 ## NPC Algo:
 
